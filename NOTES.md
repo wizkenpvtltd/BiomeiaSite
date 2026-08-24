@@ -33,7 +33,7 @@ api/_lib/github-write.js — GitHub Contents API commit helper (same
                        pattern as Avartan's api/_lib/github-write.js)
 assets/product/        — Blender renders of the 200 ml tube (transparent
                        PNG, shadow-caught)
-assets/video/turntable.mp4 — 360° product turntable, rendered in Blender
+assets/video/turntable-white.mp4 — 360° turntable on white, Blender
 ```
 
 ## Product imagery
@@ -81,15 +81,32 @@ sends the actual launch email (Mailchimp, Klaviyo, etc.), or wire
 
 ## Deploying
 
-Not yet deployed. To ship it the same way as Avartan:
+**Live:** https://biomeia-website.vercel.app
+**Vercel project:** `wiz-ken/biomeia-website`, linked to this GitHub repo.
 
-```bash
-npm i -g vercel      # if not already installed
-vercel link          # first time only, links to a Vercel project
-vercel env add GITHUB_TOKEN   # repo-scoped PAT with contents:write on this repo
-vercel --prod
-```
+Unlike Avartan, this project *is* Git-connected, so pushing to `main`
+triggers a deploy automatically. `vercel --prod` from this folder still
+works for an out-of-band deploy.
 
-`vercel` alone creates a preview URL; `vercel --prod` is what actually
-updates the live site — same gotcha as Avartan, no auto-deploy on push
-since this isn't a Git-connected Vercel project.
+`GITHUB_TOKEN` is already set as a Sensitive env var in Production (a
+repo-scoped PAT with contents:write). It is encrypted and cannot be read
+back out — to rotate it, generate a new PAT and `vercel env rm` /
+`vercel env add` it.
+
+## Blender render gotchas (5.x)
+
+The product renders come from `04_Blender_Tube_Build.py`. Several things
+bit hard on Blender 5.2 and are worth knowing before re-rendering:
+
+- `image_settings.media_type` must be set to `VIDEO` **before**
+  `file_format = "FFMPEG"` — the format enum is filtered by media type,
+  so FFMPEG is not in the list until then.
+- VSE colour strips render black in background mode, and the compositor
+  moved from `scene.node_tree` to `scene.compositing_node_group` with no
+  `CompositorNodeComposite`. Compositing transparent frames onto white
+  headless is not worth the fight — render the white backdrop in 3D.
+- A plain white world floods the scene with ambient and washes the indigo
+  out to periwinkle. Gate it on a Light Path `Is Camera Ray` so the
+  backdrop is white to camera only.
+- The floor is set `visible_camera = False` so it lights and shadows the
+  product without rendering a grey horizon band across the frame.
