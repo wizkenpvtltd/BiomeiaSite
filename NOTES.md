@@ -142,6 +142,13 @@ all four, so the band that used to repeat them under the hero is gone — the
 statline section carries just the J-Beauty positioning line. The hero copy
 carries balloon numbers matching the callouts, same 01-04 order.
 
+The J-Beauty line under the hero is centred in the white gap by tying its
+`padding-top` to `var(--section)`: the section below already supplies that
+much air, the hero above supplies only its 24px bottom padding, so the
+statline makes up the difference and the line sits mid-gap at any width.
+Do not swap that calc for a fixed clamp — it would drift out of centre as
+`--section` scales.
+
 The hero itself sits on the same page grid as `.nav-inner` and `.wrap`
 (`max-width: var(--page)` plus gutter). It used to carry the gutter alone,
 which left the BIOMEIA wordmark and the "Launching in Singapore" eyebrow on

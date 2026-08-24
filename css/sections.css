@@ -144,14 +144,19 @@
 }
 
 /* ------------------------------------------------------------ statline --- */
-/* A quiet positioning line between the hero and the science section. */
+/* A quiet positioning line between the hero and the science section, sat in
+   the middle of the white gap between them rather than tucked under the
+   hero. The section below supplies var(--section) of air; the hero above
+   supplies only its 24px bottom padding, so the difference is made up here
+   and the line ends up with var(--section) on both sides at any width. */
 .statline {
   background: var(--white);
-  padding-bottom: clamp(48px, 7vw, 88px);
+  padding-top: calc(var(--section) - 24px);
+  padding-bottom: 0;
 }
 .statline-lead {
   font-family: var(--display);
-  font-size: clamp(15px, 1.5vw, 18px);
+  font-size: clamp(16px, 2vw, 24px);
   letter-spacing: 0.16em; text-transform: uppercase;
   color: var(--indigo);
   text-align: center; margin: 0 auto; max-width: none;
