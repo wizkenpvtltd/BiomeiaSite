@@ -81,9 +81,9 @@
 }
 
 /* The stacked-layout stand-in for the annotated SVG: the plain product
-   image, with the hero copy of the spec list directly beneath it standing
-   in for the callouts. Both live inside .hero-media so the specs stay
-   attached to the product rather than drifting into a band of their own. */
+   image, with the spec list directly beneath it standing in for the
+   callouts. Both live inside .hero-media so the specs stay attached to the
+   product rather than drifting into a band of their own. */
 .hero-photo {
   display: none;
   width: auto; height: auto;
@@ -92,39 +92,11 @@
 }
 
 /* ---------------------------------------------------------- spec list --- */
-/* Two copies of the same four specs, one in the hero and one in the band
-   below it, each shown at the width where it belongs. Shared chrome here;
-   the sizing that differs between them is on .spec-hero / .spec-band. */
-.spec-list {
-  gap: 0; margin: 0;
-  border-top: 1px solid var(--rule);
-}
-.spec-list > div {
-  border-right: 1px solid var(--rule);
-  text-align: center;
-}
-.spec-list > div:last-child { border-right: 0; }
-.spec-list dt {
-  font-family: var(--display);
-  letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--indigo);
-  margin-bottom: 5px;
-}
-.spec-list dd {
-  margin: 0;
-  letter-spacing: 0.02em; color: var(--ink-2);
-}
-
-/* The band under the hero, on wide viewports. */
-.spec-band {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-}
-.spec-band > div { padding: 20px clamp(10px, 1.8vw, 24px); }
-.spec-band dt { font-size: clamp(15px, 1.7vw, 19px); }
-.spec-band dd { font-size: 13px; }
-
-/* The in-hero copy, on narrow viewports. */
-.spec-hero { display: none; }
+/* The narrow-viewport stand-in for the callouts: the same four specs in the
+   same 01-04 order, sitting with the product inside .hero-media. Hidden
+   above 900px, where the callouts on the product itself already say all
+   four and a band repeating them was pure duplication. */
+.spec-list { display: none; }
 
 @media (max-width: 900px) {
   .hero { grid-template-columns: 1fr; padding-top: 108px; text-align: left; }
@@ -133,19 +105,30 @@
   .hero-callouts { display: none; }
   .hero-photo { display: block; }
 
-  .spec-band { display: none; }
-  .spec-hero {
+  .spec-list {
     display: grid; grid-template-columns: repeat(4, 1fr);
-    width: 100%; margin-top: clamp(18px, 3.5vw, 28px);
+    width: 100%; gap: 0; margin: clamp(18px, 3.5vw, 28px) 0 0;
+    border-top: 1px solid var(--rule);
   }
-  .spec-hero > div { padding: 18px clamp(8px, 1.8vw, 20px); }
-  .spec-hero dt {
+  .spec-list > div {
+    padding: 18px clamp(8px, 1.8vw, 20px);
+    border-right: 1px solid var(--rule);
+    text-align: center;
+  }
+  .spec-list > div:last-child { border-right: 0; }
+  .spec-list dt {
+    font-family: var(--display);
     /* Small enough that "100% Waterless" stays on one line in a quarter
        column, so the sub-labels sit on a common baseline across cells. */
     font-size: clamp(13px, 1.85vw, 15.5px);
-    letter-spacing: 0.08em;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--indigo);
+    margin-bottom: 5px;
   }
-  .spec-hero dd { font-size: 12.5px; }
+  .spec-list dd {
+    margin: 0;
+    font-size: 12.5px; letter-spacing: 0.02em; color: var(--ink-2);
+  }
   /* Mirrors the balloons on the desktop callouts, same 01-04 order. */
   .spec-ref {
     display: flex; align-items: center; justify-content: center;
@@ -155,13 +138,13 @@
   }
 }
 @media (max-width: 640px) {
-  .spec-hero { grid-template-columns: repeat(2, 1fr); }
-  .spec-hero > div:nth-child(2n) { border-right: 0; }
-  .spec-hero > div:nth-child(n+3) { border-top: 1px solid var(--rule); }
+  .spec-list { grid-template-columns: repeat(2, 1fr); }
+  .spec-list > div:nth-child(2n) { border-right: 0; }
+  .spec-list > div:nth-child(n+3) { border-top: 1px solid var(--rule); }
 }
 
 /* ------------------------------------------------------------ statline --- */
-/* Positioning line plus the wide-viewport spec band. */
+/* A quiet positioning line between the hero and the science section. */
 .statline {
   background: var(--white);
   padding-bottom: clamp(48px, 7vw, 88px);
@@ -171,10 +154,10 @@
   font-size: clamp(15px, 1.5vw, 18px);
   letter-spacing: 0.16em; text-transform: uppercase;
   color: var(--indigo);
-  text-align: center; margin: 0 auto 28px; max-width: none;
+  text-align: center; margin: 0 auto; max-width: none;
 }
-."
-/* ------------------------------------------------------------- section --- */""
+
+/* ------------------------------------------------------------- section --- */
 .section { padding: var(--section) 0; }
 .section.on-bone { background: var(--bone); }
 .section-head { max-width: 640px; margin: 0 0 56px; }
