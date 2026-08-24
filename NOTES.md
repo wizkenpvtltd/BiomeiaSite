@@ -134,8 +134,22 @@ Changing the camera, the 38 degree spin, or the 1400x1750 output in
 `hero_white.py` moves the features out from under the leader lines.
 
 Below 900px the labels would scale past readable, so the SVG is swapped for
-a plain `<img class="hero-photo">` of the same file (no extra request), and
-the `.spec-list` -- which lives inside `.hero-media`, not in a band of its
-own -- appears directly beneath it carrying the same four details in the
-same 01-04 order, each with a balloon number matching the desktop callout.
-It is hidden above 900px, where the callouts already say all four things.
+a plain `<img class="hero-photo">` of the same file (no extra request).
+
+The four specs appear **twice in the markup, deliberately**: `.spec-hero`
+inside `.hero-media`, shown below 900px so the specs sit with the product;
+and `.spec-band` in the statline section, shown above 900px as the band
+under the hero. CSS cannot move a node between two sections, and both
+placements were wanted, so there are two nodes. Whichever is not in use is
+`display:none`, which takes it out of the accessibility tree, so only one is
+announced. **Edit both.** Shared cell chrome is on `.spec-list`; only the
+sizing differs between them. The hero copy carries balloon numbers matching
+the desktop callouts; the band does not, since the callouts above it
+already have them.
+
+The hero itself sits on the same page grid as `.nav-inner` and `.wrap`
+(`max-width: var(--page)` plus gutter). It used to carry the gutter alone,
+which left the BIOMEIA wordmark and the "Launching in Singapore" eyebrow on
+different left edges. `.hero h1` is scoped a size smaller than the global
+`h1` because the narrower copy column broke the headline to three lines at
+the global 76px cap.
