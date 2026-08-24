@@ -149,6 +149,12 @@ a { color: inherit; }
   text-decoration: none; color: var(--ink);
 }
 .nav-links a:hover { color: var(--indigo); }
+
+/* The nav CTA is a .btn, but `.nav-links a` outranks `.btn` on specificity
+   and was repainting it dark-on-indigo. Restate it here so the button keeps
+   its white text, and keep the hover from greying it out too. */
+.nav-links a.btn { color: var(--white); }
+.nav-links a.btn:hover { color: var(--white); }
 @media (max-width: 560px) {
   .nav-links .nav-hide { display: none; }
   .nav-inner { height: 64px; }
