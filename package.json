@@ -1,0 +1,10 @@
+{
+  "name": "biomeia-website",
+  "version": "1.0.0",
+  "description": "Biomeia pre-launch site — Singapore",
+  "private": true,
+  "scripts": {
+    "test": "echo \"no build step — static site\" && exit 0"
+  },
+  "license": "UNLICENSED"
+}
