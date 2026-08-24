@@ -32,6 +32,11 @@ js/signup.js          — signup form -> POST /api/subscribe
 api/subscribe.js      — validates + commits signups to data/signups/
 api/_lib/github-write.js — GitHub Contents API commit helper (same
                        pattern as Avartan's api/_lib/github-write.js)
+api/auth.js           — GitHub OAuth step 1 for the CMS (redirect)
+api/callback.js       — GitHub OAuth step 2 (token exchange)
+admin/index.html      — Decap CMS shell
+admin/config.yml      — CMS backend + collections
+robots.txt            — allows all, disallows /admin
 assets/product/        — Blender renders of the 200 ml tube (transparent
                        PNG, shadow-caught)
 assets/video/turntable-white.mp4 — 360° turntable on white, Blender
@@ -155,3 +160,44 @@ which left the BIOMEIA wordmark and the "Launching in Singapore" eyebrow on
 different left edges. `.hero h1` is scoped a size smaller than the global
 `h1` because the narrower copy column broke the headline to three lines at
 the global 76px cap.
+
+## The admin (/admin)
+
+Decap CMS, same setup as the Avartan site: `admin/index.html` loads Decap
+from unpkg and reads `admin/config.yml`.
+
+**One collection: Pre-Launch Signups**, pointed at `data/signups` with
+`create: false`. Entries are written by `api/subscribe.js`, never by hand,
+so the "New" button is hidden. Delete stays enabled — that is what honours
+a PDPA removal request without going into the repo, and it clears test and
+spam entries. `data/signups/.gitkeep` exists because Decap lists the folder
+through the GitHub API, which 404s on a folder that is not there.
+
+There is **no content collection**. Unlike Avartan, this site's copy is
+inline in the HTML rather than rendered from `data/*.json` by a build
+script, and Decap cannot edit arbitrary markup. Making the page copy
+editable would mean extracting it into JSON and adding a build step — a
+real piece of work, not a config change.
+
+### Auth — needs a GitHub OAuth App
+
+Decap's github backend defaults to Netlify's hosted OAuth proxy, which only
+exists for Netlify-hosted sites. This site is on Vercel, so `config.yml`
+points `auth_endpoint` at `api/auth` and the handshake runs through
+`api/auth.js` (redirect to GitHub) and `api/callback.js` (server-side token
+exchange, then postMessage back to the CMS tab). The client secret never
+reaches the browser, which is the whole reason the proxy exists.
+
+**`/admin` will show "Login with GitHub" but cannot complete the login
+until a GitHub OAuth App exists and its credentials are set in Vercel:**
+
+1. GitHub → Settings → Developer settings → OAuth Apps → New OAuth App
+   - Homepage URL: `https://biomeia-website.vercel.app`
+   - Authorization callback URL:
+     `https://biomeia-website.vercel.app/api/callback`
+2. Set `OAUTH_CLIENT_ID` and `OAUTH_CLIENT_SECRET` in the Vercel project
+   (Production, Sensitive), then redeploy.
+
+Access is whoever has write access to `wizkenpvtltd/BiomeiaSite` — the CMS
+acts as the signed-in GitHub user, so there is no separate password to
+manage or leak. Deleting a signup in the CMS is a real commit to `main`.

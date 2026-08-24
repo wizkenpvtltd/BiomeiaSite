@@ -1,0 +1,5 @@
+Keeps data/signups/ present in the repo before the first real signup.
+The admin (Decap CMS) lists this folder via the GitHub API, which 404s on a
+folder that does not exist. api/subscribe.js writes one .json file here per
+submission; the collection filters to extension: json, so this file is
+ignored by the CMS. Safe to delete once real signups exist.

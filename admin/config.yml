@@ -1,0 +1,46 @@
+backend:
+  name: github
+  repo: wizkenpvtltd/BiomeiaSite
+  branch: main
+  # Decap's github backend defaults to Netlify's hosted OAuth proxy
+  # (api.netlify.com), which only exists for Netlify-hosted sites.
+  # This site is on Vercel, so it uses a small self-hosted proxy
+  # instead -- see api/auth.js and api/callback.js. Requires a GitHub
+  # OAuth App (callback URL: https://biomeia-website.vercel.app/api/callback)
+  # with its Client ID / Secret set as OAUTH_CLIENT_ID / OAUTH_CLIENT_SECRET
+  # in the Vercel project's environment variables.
+  base_url: https://biomeia-website.vercel.app
+  auth_endpoint: api/auth
+
+# No editorial_workflow here, unlike the Avartan site. That mode exists so
+# content edits go through draft -> review -> publish before reaching main.
+# This CMS has no authored content — only the signups, which are read-only
+# apart from deletion — so review branches would add friction and nothing
+# else. If a content collection is ever added, turn it on then.
+
+# Unused today (nothing here takes an upload), but Decap requires both keys
+# to be present. Kept on the same convention as the rest of the site.
+media_folder: "assets/images/uploads"
+public_folder: "assets/images/uploads"
+
+collections:
+  # Read-only from the client's perspective: entries are never created
+  # here. api/subscribe.js writes them, one GitHub commit per submission,
+  # whenever a visitor completes the pre-launch form on the home page.
+  # create: false hides the "New" button, since a hand-made entry here
+  # would just be a fake signup. Deleting stays available so test and
+  # spam entries can be cleared, and so a PDPA removal request can be
+  # honoured without going into the repo.
+  - name: "signups"
+    label: "Pre-Launch Signups"
+    folder: "data/signups"
+    create: false
+    format: "json"
+    extension: "json"
+    summary: "{{fields.name}} — {{fields.email}} ({{fields.submittedAt}})"
+    sortable_fields: ["submittedAt", "name", "email"]
+    fields:
+      - { label: "Name", name: "name", widget: "string" }
+      - { label: "Email", name: "email", widget: "string" }
+      - { label: "Market", name: "market", widget: "string", required: false }
+      - { label: "Submitted At", name: "submittedAt", widget: "datetime" }
