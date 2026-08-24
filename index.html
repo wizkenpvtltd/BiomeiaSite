@@ -40,33 +40,77 @@
       </p>
       <a href="#signup" class="btn">Get First-Batch Access</a>
     </div>
+
+    <!-- Product plus engineering callouts. The image lives inside the SVG so
+         the leader lines stay locked to the features they point at at every
+         viewport width — an absolutely-positioned overlay drifts as soon as
+         the container aspect changes. -->
     <div class="hero-media">
-      <div class="hero-ring" aria-hidden="true"></div>
-      <img src="assets/product/tube-angle.png" alt="Biomeia Pre-Wash Scalp Cleansing Oil, 200 ml tube with built-in applicator" width="900" height="1125">
+      <svg class="hero-callouts" viewBox="0 0 560 470" role="img"
+           aria-label="Biomeia Pre-Wash Scalp Cleansing Oil, 200 ml tube with a built-in multi-port comb applicator and ON/OFF dispensing control">
+        <image href="assets/product/tube-angle.png" x="200" y="12" width="340" height="425"/>
+
+        <!-- Leaders elbow out horizontally from the balloon before angling
+             to the anchor, so the label column stays on an even rhythm while
+             the anchors sit exactly on the features. -->
+        <g class="co-line">
+          <path d="M203 150 H 329"/>
+          <path d="M203 255 H 300 L 387 288"/>
+          <path d="M203 330 H 337"/>
+          <path d="M203 400 H 300 L 347 374"/>
+        </g>
+        <g class="co-dot">
+          <circle cx="332" cy="150" r="3.2"/>
+          <circle cx="390" cy="288" r="3.2"/>
+          <circle cx="340" cy="330" r="3.2"/>
+          <circle cx="350" cy="373" r="3.2"/>
+        </g>
+
+        <g class="co-balloon">
+          <circle cx="194" cy="150" r="9"/>
+          <circle cx="194" cy="255" r="9"/>
+          <circle cx="194" cy="330" r="9"/>
+          <circle cx="194" cy="400" r="9"/>
+        </g>
+        <g class="co-ref">
+          <text x="194" y="153.5">01</text>
+          <text x="194" y="258.5">02</text>
+          <text x="194" y="333.5">03</text>
+          <text x="194" y="403.5">04</text>
+        </g>
+
+        <g class="co-label">
+          <text x="176" y="148">100% WATERLESS</text>
+          <text x="176" y="253">200 ML</text>
+          <text x="176" y="328">ON / OFF</text>
+          <text x="176" y="398">MULTI-PORT</text>
+        </g>
+        <g class="co-sub">
+          <text x="176" y="162">No water fillers</text>
+          <text x="176" y="267">6.76 fl. oz. net</text>
+          <text x="176" y="342">Dispensing control</text>
+          <text x="176" y="412">Comb applicator</text>
+        </g>
+      </svg>
+      <!-- Below 900px the callout labels would scale past readable, so the
+           SVG gives way to the plain product image and the spec list under
+           the hero carries the same four details. Same file, so no extra
+           request. -->
+      <img class="hero-photo" src="assets/product/tube-angle.png" alt="Biomeia Pre-Wash Scalp Cleansing Oil, 200 ml tube with a built-in applicator" width="1400" height="1750">
     </div>
   </header>
 
   <section class="statline">
     <div class="wrap">
       <p class="statline-lead">Bringing J-Beauty scalp care to Singapore</p>
-      <div class="stat-row">
-        <div class="stat">
-          <svg class="stat-arrow arrow-1" viewBox="0 0 60 40" aria-hidden="true"><path d="M2 37 C 20 34, 38 26, 56 8" /><path d="M47 6 L 58 6 L 55 17" /></svg>
-          <b>100%</b><span>Waterless formula</span>
-        </div>
-        <div class="stat">
-          <svg class="stat-arrow arrow-2" viewBox="0 0 60 40" aria-hidden="true"><path d="M6 37 C 22 32, 38 22, 54 8" /><path d="M45 5 L 56 6 L 52 17" /></svg>
-          <b>1</b><span>Built-in scalp applicator</span>
-        </div>
-        <div class="stat">
-          <svg class="stat-arrow arrow-3" viewBox="0 0 60 40" aria-hidden="true"><path d="M14 37 C 26 30, 38 18, 50 7" /><path d="M41 5 L 52 5 L 49 16" /></svg>
-          <b>5</b><span>Steps, once or twice weekly</span>
-        </div>
-        <div class="stat">
-          <svg class="stat-arrow arrow-4" viewBox="0 0 60 40" aria-hidden="true"><path d="M26 38 C 32 28, 36 16, 40 6" /><path d="M33 7 L 41 3 L 44 13" /></svg>
-          <b>SG</b><span>Launching in Singapore</span>
-        </div>
-      </div>
+      <!-- Same four details as the hero callouts, for viewports where the
+           layout stacks and SVG label text would be too small to read. -->
+      <dl class="spec-list">
+        <div><dt>100% Waterless</dt><dd>No water fillers</dd></div>
+        <div><dt>200 ml</dt><dd>6.76 fl. oz. net</dd></div>
+        <div><dt>ON / OFF</dt><dd>Dispensing control</dd></div>
+        <div><dt>Multi-port</dt><dd>Comb applicator</dd></div>
+      </dl>
     </div>
   </section>
 
@@ -150,7 +194,7 @@
   <!-- ======================================================= applicator === -->
   <section class="section">
     <div class="wrap applicator-band">
-      <img src="assets/product/applicator.png" loading="lazy" alt="Close-up of the Biomeia applicator head, a dished oval with teeth ringing the rim" width="1600" height="1200">
+      <img src="assets/product/applicator.png" loading="lazy" alt="Close-up of the Biomeia applicator head, a dished oval with teeth ringing the rim" width="1600" height="1060">
       <div class="reveal">
         <p class="eyebrow">Direct-to-Scalp Delivery</p>
         <h2>An applicator built for skin, not for hair length</h2>

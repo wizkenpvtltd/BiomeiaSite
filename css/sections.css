@@ -27,31 +27,68 @@
 }
 .hero .lede { margin-bottom: 34px; }
 
+/* Height comes from the callout SVG own 560:470 aspect rather than a
+   clamp here -- the two must not fight, or the leader lines shear away
+   from the product they point at. */
 .hero-media {
   position: relative;
   display: flex; align-items: center; justify-content: center;
-  height: clamp(360px, 46vw, 640px);
 }
-.hero-media img {
-  height: 100%; width: auto; object-fit: contain;
-  filter: drop-shadow(0 32px 60px rgba(20, 22, 28, 0.16));
+
+/* ------------------------------------------------- hero spec callouts --- */
+/* The product photograph is drawn inside this SVG rather than behind it,
+   so leader lines, balloons and the features they point at share one
+   coordinate space and stay registered at every width. */
+.hero-callouts {
+  width: 100%; height: auto;
+  overflow: visible;
 }
-.hero-ring {
-  position: absolute; inset: 6% 14%;
-  border: 1px solid var(--rule);
-  border-radius: 50%;
-  z-index: -1;
+.co-line path {
+  fill: none;
+  stroke: var(--rule-strong);
+  stroke-width: 1;
 }
+.co-dot circle { fill: none; stroke: var(--indigo); stroke-width: 1.4; }
+.co-balloon circle { fill: none; stroke: var(--indigo); stroke-width: 1; }
+.co-ref text {
+  fill: var(--indigo);
+  font-family: var(--display);
+  font-size: 9px; letter-spacing: 0.04em;
+  text-anchor: middle;
+}
+.co-label text {
+  fill: var(--ink);
+  font-family: var(--display);
+  font-size: 13.5px; letter-spacing: 0.13em;
+  text-anchor: end;
+}
+.co-sub text {
+  fill: var(--ink-3);
+  font-family: var(--body);
+  font-size: 10.5px; letter-spacing: 0.02em;
+  text-anchor: end;
+}
+
+/* The stacked-layout stand-in for the annotated SVG. */
+.hero-photo {
+  display: none;
+  width: auto; height: auto;
+  max-height: clamp(280px, 62vw, 440px);
+  margin: 0 auto;
+}
+
 @media (max-width: 900px) {
   .hero { grid-template-columns: 1fr; padding-top: 108px; text-align: left; }
-  .hero-media { order: -1; height: clamp(260px, 70vw, 440px); margin-bottom: 8px; }
+  .hero-media { order: -1; margin-bottom: 8px; }
   .hero-copy { max-width: none; }
+  .hero-callouts { display: none; }
+  .hero-photo { display: block; }
 }
 
 /* ------------------------------------------------------------ statline --- */
-/* Reads as annotation on the hero above it rather than a separate band:
-   no top border, same white ground, and each stat throws a hand-drawn
-   arrow up toward the product. */
+/* Positioning line plus the same four specs as the hero callouts, set as a
+   plain definition list so they still read when the hero annotations are
+   hidden on narrow screens. */
 .statline {
   background: var(--white);
   padding-bottom: clamp(48px, 7vw, 88px);
@@ -61,38 +98,37 @@
   font-size: clamp(15px, 1.5vw, 18px);
   letter-spacing: 0.16em; text-transform: uppercase;
   color: var(--indigo);
-  text-align: center; margin: 0 auto 8px; max-width: none;
+  text-align: center; margin: 0 auto 28px; max-width: none;
 }
-.stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
-.stat {
-  padding: 8px clamp(8px, 1.6vw, 20px) 0;
+.spec-list {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 0; margin: 0;
+  border-top: 1px solid var(--rule);
+}
+.spec-list > div {
+  padding: 20px clamp(10px, 1.8vw, 24px);
+  border-right: 1px solid var(--rule);
   text-align: center;
-  position: relative;
 }
-.stat-arrow {
-  width: clamp(38px, 3.6vw, 56px); height: auto;
-  margin: 0 auto 10px;
-  display: block;
-  fill: none; stroke: var(--rule-strong);
-  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+.spec-list > div:last-child { border-right: 0; }
+.spec-list dt {
+  font-family: var(--display);
+  font-size: clamp(15px, 1.7vw, 19px);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--indigo);
+  margin-bottom: 5px;
 }
-/* The product sits right of centre in the hero, so the arrows fan toward
-   it rather than each pointing straight up out of its own column. */
-.arrow-1 { margin-left: 55%; }
-.arrow-2 { margin-left: 52%; }
-.arrow-3 { margin-left: 46%; }
-.arrow-4 { margin-left: 34%; }
-.stat b {
-  display: block; font-family: var(--display); font-size: clamp(22px, 2.6vw, 30px);
-  color: var(--indigo); margin-bottom: 6px;
+.spec-list dd {
+  margin: 0;
+  font-size: 13px; letter-spacing: 0.02em; color: var(--ink-2);
 }
-.stat span { font-size: 13px; letter-spacing: 0.04em; color: var(--ink-2); }
 @media (max-width: 720px) {
-  .stat-row { grid-template-columns: repeat(2, 1fr); row-gap: 28px; }
-  .stat-arrow { display: none; }   /* arrows only make sense pointing at the hero */
+  .spec-list { grid-template-columns: repeat(2, 1fr); }
+  .spec-list > div:nth-child(2n) { border-right: 0; }
+  .spec-list > div:nth-child(n+3) { border-top: 1px solid var(--rule); }
 }
-
-/* ------------------------------------------------------------- section --- */
+."
+/* ------------------------------------------------------------- section --- */"
 .section { padding: var(--section) 0; }
 .section.on-bone { background: var(--bone); }
 .section-head { max-width: 640px; margin: 0 0 56px; }
@@ -103,6 +139,9 @@
   display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 5vw, 80px);
   align-items: center;
 }
+/* h2 is margin-zeroed globally; standalone headings like this one need
+   their own space before the body copy. */
+.logic-copy h2 { margin-bottom: 22px; }
 .logic-copy p { font-size: 17.5px; color: var(--ink-2); }
 .logic-copy strong { color: var(--ink); font-weight: 600; }
 .bridge-list { list-style: none; margin: 28px 0 0; padding: 0; display: grid; gap: 0; }

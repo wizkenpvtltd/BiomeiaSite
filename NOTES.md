@@ -14,8 +14,9 @@ white minimalism as the one accent.
 ## File map
 
 ```
-index.html          — the landing page (hero, stats, science, ritual,
-                       applicator, turntable video, signup)
+index.html          — the landing page (hero with engineering callouts,
+                       spec line, science, ritual, applicator, turntable
+                       video, signup)
 story.html           — founder's-story page, drawn from the brand
                        guidelines' founder narrative (§3)
 privacy.html         — PDPA-oriented privacy policy (draft, flagged for
@@ -45,11 +46,19 @@ stock photography. Transparent background with `is_shadow_catcher` on
 the floor, so the tube drops onto the page without a studio backdrop
 fighting the white ground.
 
-- `tube-front.png` / `tube-angle.png` — hero and general use
-- `applicator.png` — a close macro of the comb-tip rim. It reads more
-  abstract than a straight product shot; if it needs to read more
-  clearly as "the applicator" at a glance, re-render a wider framing
-  from `CAM_Comb` with `SHOW_CAP = False`.
+- `tube-front.png` — straight-on, still a transparent PNG.
+- `tube-angle.png` — the hero three-quarter. Re-rendered onto **white**
+  (`scratchpad/hero_white.py`), not transparent: the shadow-catcher floor
+  carried its soft shadow to the frame edge, which showed on the page as a
+  faint grey rectangle behind the tube. Same Is Camera Ray world as the
+  turntable. Its framing is load-bearing — the hero callout SVG anchors
+  leader lines to features by coordinate, so re-render with the same
+  camera, the same 38 degree spin and the same 1400x1750, or the leaders
+  will point at nothing.
+- `applicator.png` — the applicator head, re-framed wide
+  (`scratchpad/applicator_wide.py`) from a 70 mm lens at f/5.6 so the whole
+  ring of teeth plus the lower tube body read at a glance. The first pass
+  was a tight macro that looked like abstract texture.
 
 ## Signups
 
@@ -110,3 +119,20 @@ bit hard on Blender 5.2 and are worth knowing before re-rendering:
   backdrop is white to camera only.
 - The floor is set `visible_camera = False` so it lights and shadows the
   product without rendering a grey horizon band across the frame.
+
+## The hero callouts
+
+The hero product is drawn *inside* an SVG (`.hero-callouts`) rather than as
+an `<img>` behind an overlay. That is deliberate: the balloons, leader lines
+and the features they point at then share one coordinate space and stay
+registered at every viewport width, where an absolutely-positioned overlay
+drifts as soon as the container aspect changes.
+
+Anchor coordinates are in the SVG's 560x470 user space, with the render
+placed at `x=200 y=12 w=340 h=425`. **They are tied to this exact render.**
+Changing the camera, the 38 degree spin, or the 1400x1750 output in
+`hero_white.py` moves the features out from under the leader lines.
+
+Below 900px the labels would scale past readable, so the SVG is swapped for
+a plain `<img class="hero-photo">` of the same file (no extra request) and
+the `.spec-list` under the hero carries the same four details.
