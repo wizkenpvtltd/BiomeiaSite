@@ -15,8 +15,8 @@ white minimalism as the one accent.
 
 ```
 index.html          — the landing page (hero with engineering callouts,
-                       spec line, science, ritual, applicator, turntable
-                       video, signup)
+                       science, ritual, applicator, turntable video,
+                       signup)
 story.html           — founder's-story page, drawn from the brand
                        guidelines' founder narrative (§3)
 privacy.html         — PDPA-oriented privacy policy (draft, flagged for
@@ -134,5 +134,8 @@ Changing the camera, the 38 degree spin, or the 1400x1750 output in
 `hero_white.py` moves the features out from under the leader lines.
 
 Below 900px the labels would scale past readable, so the SVG is swapped for
-a plain `<img class="hero-photo">` of the same file (no extra request) and
-the `.spec-list` under the hero carries the same four details.
+a plain `<img class="hero-photo">` of the same file (no extra request), and
+the `.spec-list` -- which lives inside `.hero-media`, not in a band of its
+own -- appears directly beneath it carrying the same four details in the
+same 01-04 order, each with a balloon number matching the desktop callout.
+It is hidden above 900px, where the callouts already say all four things.

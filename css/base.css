@@ -155,8 +155,12 @@ a { color: inherit; }
    its white text, and keep the hover from greying it out too. */
 .nav-links a.btn { color: var(--white); }
 .nav-links a.btn:hover { color: var(--white); }
-@media (max-width: 560px) {
+/* The three section links plus the CTA stop fitting alongside the
+   wordmark at about 660px, where they overlapped it. */
+@media (max-width: 720px) {
   .nav-links .nav-hide { display: none; }
+}
+@media (max-width: 560px) {
   .nav-inner { height: 64px; }
 }
 

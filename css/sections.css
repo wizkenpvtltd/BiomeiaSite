@@ -32,7 +32,8 @@
    from the product they point at. */
 .hero-media {
   position: relative;
-  display: flex; align-items: center; justify-content: center;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
 }
 
 /* ------------------------------------------------- hero spec callouts --- */
@@ -69,26 +70,66 @@
   text-anchor: end;
 }
 
-/* The stacked-layout stand-in for the annotated SVG. */
+/* The stacked-layout stand-in for the annotated SVG: the plain product
+   image, with the spec list directly beneath it standing in for the
+   callouts. Both live inside .hero-media so the specs stay attached to the
+   product rather than drifting into a band of their own. */
 .hero-photo {
   display: none;
   width: auto; height: auto;
   max-height: clamp(280px, 62vw, 440px);
   margin: 0 auto;
 }
+.spec-list { display: none; }
 
 @media (max-width: 900px) {
   .hero { grid-template-columns: 1fr; padding-top: 108px; text-align: left; }
-  .hero-media { order: -1; margin-bottom: 8px; }
+  .hero-media { order: -1; margin-bottom: clamp(20px, 4vw, 34px); }
   .hero-copy { max-width: none; }
   .hero-callouts { display: none; }
   .hero-photo { display: block; }
+
+  .spec-list {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    width: 100%; gap: 0; margin: clamp(18px, 3.5vw, 28px) 0 0;
+    border-top: 1px solid var(--rule);
+  }
+  .spec-list > div {
+    padding: 18px clamp(8px, 1.8vw, 20px);
+    border-right: 1px solid var(--rule);
+    text-align: center;
+  }
+  .spec-list > div:last-child { border-right: 0; }
+  /* Mirrors the balloons on the desktop callouts, same 01-04 order. */
+  .spec-ref {
+    display: flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; margin: 0 auto 8px;
+    border: 1px solid var(--indigo); border-radius: 50%;
+    font-size: 9px; letter-spacing: 0.04em; line-height: 1;
+  }
+  .spec-list dt {
+    font-family: var(--display);
+    /* Small enough that "100% Waterless" stays on one line in a quarter
+       column, so the sub-labels sit on a common baseline across cells. */
+    font-size: clamp(13px, 1.85vw, 15.5px);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--indigo);
+    margin-bottom: 5px;
+  }
+  .spec-list dd {
+    margin: 0;
+    font-size: 12.5px; letter-spacing: 0.02em; color: var(--ink-2);
+  }
+}
+@media (max-width: 640px) {
+  .spec-list { grid-template-columns: repeat(2, 1fr); }
+  .spec-list > div:nth-child(2n) { border-right: 0; }
+  .spec-list > div:nth-child(n+3) { border-top: 1px solid var(--rule); }
 }
 
 /* ------------------------------------------------------------ statline --- */
-/* Positioning line plus the same four specs as the hero callouts, set as a
-   plain definition list so they still read when the hero annotations are
-   hidden on narrow screens. */
+/* A quiet positioning line between the hero and the science section. The
+   four specs it used to carry now sit with the product in the hero. */
 .statline {
   background: var(--white);
   padding-bottom: clamp(48px, 7vw, 88px);
@@ -98,34 +139,7 @@
   font-size: clamp(15px, 1.5vw, 18px);
   letter-spacing: 0.16em; text-transform: uppercase;
   color: var(--indigo);
-  text-align: center; margin: 0 auto 28px; max-width: none;
-}
-.spec-list {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 0; margin: 0;
-  border-top: 1px solid var(--rule);
-}
-.spec-list > div {
-  padding: 20px clamp(10px, 1.8vw, 24px);
-  border-right: 1px solid var(--rule);
-  text-align: center;
-}
-.spec-list > div:last-child { border-right: 0; }
-.spec-list dt {
-  font-family: var(--display);
-  font-size: clamp(15px, 1.7vw, 19px);
-  letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--indigo);
-  margin-bottom: 5px;
-}
-.spec-list dd {
-  margin: 0;
-  font-size: 13px; letter-spacing: 0.02em; color: var(--ink-2);
-}
-@media (max-width: 720px) {
-  .spec-list { grid-template-columns: repeat(2, 1fr); }
-  .spec-list > div:nth-child(2n) { border-right: 0; }
-  .spec-list > div:nth-child(n+3) { border-top: 1px solid var(--rule); }
+  text-align: center; margin: 0 auto; max-width: none;
 }
 ."
 /* ------------------------------------------------------------- section --- */"
