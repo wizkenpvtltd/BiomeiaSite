@@ -201,3 +201,27 @@ until a GitHub OAuth App exists and its credentials are set in Vercel:**
 Access is whoever has write access to `wizkenpvtltd/BiomeiaSite` — the CMS
 acts as the signed-in GitHub user, so there is no separate password to
 manage or leak. Deleting a signup in the CMS is a real commit to `main`.
+
+### If the CMS login fails
+
+`api/auth.js` and `api/callback.js` both `.trim()` the credentials, because
+a value pasted into the Vercel dashboard routinely carries a trailing
+newline and GitHub reports that as **incorrect_client_credentials** — a
+message that blames the credentials rather than the whitespace. That cost a
+round of pointless secret rotation during setup. Do not remove the trims.
+
+Probe the handshake without logging in:
+
+    curl -s https://biomeia-website.vercel.app/api/callback?code=0123456789abcdef0123
+
+- `The code passed is incorrect or expired` — **credentials are good.** That
+  is just the fake code being rejected, which is the expected result.
+- `The client_id and/or client_secret passed are incorrect` — the ID/secret
+  pair is wrong, or one of them has stray whitespace.
+- `Missing OAUTH_CLIENT_ID / OAUTH_CLIENT_SECRET` — not set on the
+  deployment. Note that env vars only reach builds made *after* they are
+  set, so a change needs a redeploy.
+
+Generating a new client secret on the GitHub OAuth App page immediately
+invalidates the previous one, so anything already sitting in Vercel stops
+working the moment you click that button.
