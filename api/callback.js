@@ -16,8 +16,11 @@ module.exports = async (req, res) => {
     return;
   }
 
-  const clientId = process.env.OAUTH_CLIENT_ID;
-  const clientSecret = process.env.OAUTH_CLIENT_SECRET;
+  // See the note in auth.js: trailing whitespace on a pasted secret comes
+  // back from GitHub as incorrect_client_credentials, which sends you
+  // hunting for the wrong bug.
+  const clientId = (process.env.OAUTH_CLIENT_ID || '').trim();
+  const clientSecret = (process.env.OAUTH_CLIENT_SECRET || '').trim();
   if (!clientId || !clientSecret) {
     res.status(500).send('Missing OAUTH_CLIENT_ID / OAUTH_CLIENT_SECRET environment variables.');
     return;

@@ -6,7 +6,10 @@
 // browser to GitHub's own authorize screen; the actual token exchange
 // happens in api/callback.js once GitHub redirects back.
 module.exports = (req, res) => {
-  const clientId = process.env.OAUTH_CLIENT_ID;
+  // Trimmed: a value pasted into a dashboard field routinely picks up a
+  // trailing newline, and GitHub then rejects the pair with a message that
+  // blames the credentials rather than the whitespace.
+  const clientId = (process.env.OAUTH_CLIENT_ID || '').trim();
   if (!clientId) {
     res.status(500).send('Missing OAUTH_CLIENT_ID environment variable.');
     return;
