@@ -17,8 +17,8 @@ white minimalism as the one accent.
 index.html          — the landing page (hero with engineering callouts,
                        problem, science, ritual, applicator, turntable
                        video, signup)
-story.html           — founder's-story page, drawn from the brand
-                       guidelines' founder narrative (§3)
+story.html           — the founder's statement, drawn from the brand
+                       guidelines' founder narrative (§3), signed Romanshi
 privacy.html         — PDPA-oriented privacy policy (draft, flagged for
                        legal review before launch)
 terms.html           — terms of use (draft, same caveat)
@@ -268,3 +268,20 @@ all four pages. They remain in the footer, which is the sitemap. The
 `.nav-hide` rule went with them — those two links were its only users, so
 the 720px breakpoint that hid them is dead code now and was removed.
 `story.html` marks its own link `aria-current="page"`.
+
+## Detail pages (story / privacy / terms)
+
+They sit on the same page grid as `.nav-inner` and the home page's
+sections — `max-width: var(--page)` plus gutter — so the text starts under
+the BIOMEIA wordmark rather than on a narrower centred column of its own.
+The container is the full 1240; the reading measure is capped separately at
+620px on `.article > *`. Both caps are needed: without the second, rules
+and blockquotes would run the full 1240 while paragraphs stopped at the
+global `62ch`, leaving two different right edges.
+
+story.html opens with an `.epigraph` — the "over-hyped beauty brand" line,
+moved up from mid-article to set the tone before the narrative starts. It
+carries no left rule on purpose: at that size the type does the work, and a
+border would make it read as a pull quote lifted from the body rather than
+an opening statement. It is signed once at the end, **Romanshi, Founder,
+Biomeia**, via `.signature`.
