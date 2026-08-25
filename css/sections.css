@@ -152,7 +152,10 @@
 .statline {
   background: var(--white);
   padding-top: calc(var(--section) - 24px);
-  padding-bottom: 0;
+  /* Was 0, back when the next section was white and supplied this gap
+     itself. The problem band below is bone, so the white has to come from
+     here — otherwise the line sits right on the colour change. */
+  padding-bottom: var(--section);
 }
 .statline-lead {
   font-family: var(--display);
@@ -167,6 +170,39 @@
 .section.on-bone { background: var(--bone); }
 .section-head { max-width: 640px; margin: 0 0 56px; }
 .section-head.center { margin-left: auto; margin-right: auto; text-align: center; }
+
+/* ------------------------------------------------------------ problem --- */
+/* Names the lived frustration before #logic explains the biology behind it.
+   Deliberately experiential rather than technical — the myth-vs-fact pairs
+   in .bridge-list do the explaining, and repeating that here would just
+   make the reader hear the same argument twice. */
+.problem-list {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: clamp(20px, 3vw, 40px);
+}
+.problem-list li {
+  border-top: 2px solid var(--indigo);
+  padding-top: 18px;
+}
+.problem-list h4 {
+  font-size: clamp(15px, 1.6vw, 18px);
+  letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--ink); margin-bottom: 10px;
+}
+.problem-list p {
+  margin: 0; max-width: none;
+  font-size: 15px; line-height: 1.6; color: var(--ink-2);
+}
+.problem-close {
+  margin: clamp(40px, 6vw, 68px) auto 0; max-width: 44ch;
+  text-align: center;
+  font-family: var(--display);
+  font-size: clamp(19px, 2.4vw, 29px); line-height: 1.35;
+  color: var(--indigo);
+}
+@media (max-width: 860px) { .problem-list { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px) { .problem-list { grid-template-columns: 1fr; } }
 
 /* --------------------------------------------------------- skin-first --- */
 .logic-grid {

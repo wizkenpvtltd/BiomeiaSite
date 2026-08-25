@@ -15,8 +15,8 @@ white minimalism as the one accent.
 
 ```
 index.html          — the landing page (hero with engineering callouts,
-                       science, ritual, applicator, turntable video,
-                       signup)
+                       problem, science, ritual, applicator, turntable
+                       video, signup)
 story.html           — founder's-story page, drawn from the brand
                        guidelines' founder narrative (§3)
 privacy.html         — PDPA-oriented privacy policy (draft, flagged for
@@ -225,3 +225,27 @@ Probe the handshake without logging in:
 Generating a new client secret on the GitHub OAuth App page immediately
 invalidates the previous one, so anything already sitting in Vercel stops
 working the moment you click that button.
+
+## Page copy voice
+
+**story.html is written in the founder's first person throughout.** It used
+to alternate between third-person brand narration and first-person pull
+quotes, and that switching was most of what made it read like a press
+release. The facts are unchanged — all of them come from §3 of
+`Biomeia_Brand_Strategy_Guidelines_2.pdf`; nothing was invented to make it
+flow. Attribution now sits once at the end as a `.signature` sign-off
+rather than as a `<cite>` on every quote, and the blockquotes are pull
+quotes lifted from the surrounding prose.
+
+**The problem band (#problem)** sits between the J-Beauty line and #logic,
+and is deliberately experiential — the frustration the reader has lived —
+because #logic already carries the biology and the myth-vs-fact pairs in
+`.bridge-list`. Repeating the argument in both would just make the reader
+hear it twice. It reads: problem, then explanation, then ritual.
+
+Note the coupling: #problem is on `--bone`, and the J-Beauty line above it
+is centred in a *white* gap. `.statline` therefore owns its own
+`padding-bottom: var(--section)` — it used to be `0`, relying on the next
+section's top padding for that space, which stopped working the moment the
+next section stopped being white. If a section is ever inserted between
+them, check the line is still centred and still sitting on white.

@@ -20,6 +20,16 @@
   display: block; margin-top: 14px; font-family: var(--body); font-style: normal;
   font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3);
 }
+/* The story is told in the founder's own voice throughout rather than
+   narrated about her, so the attribution sits once at the end as a
+   sign-off instead of hanging off every pull quote. */
+.signature {
+  margin-top: 36px;
+  font-family: var(--display);
+  font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink-3);
+}
+
 .article hr { border: none; border-top: 1px solid var(--rule); margin: 56px 0; }
 .article h3 { margin: 0 0 16px; }
 
