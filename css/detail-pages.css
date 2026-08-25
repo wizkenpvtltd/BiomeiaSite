@@ -12,24 +12,37 @@
 .page-hero .eyebrow::before { content:""; width:7px; height:7px; border-radius:50%; background:var(--indigo); flex:none; }
 .page-hero h1 { margin: 0 0 20px; max-width: 680px; }
 
-/* The line that sets the tone before the story starts. No rule down the
-   side — at this size the type carries it, and a border would make it read
-   as a pull quote lifted from the body rather than an opening statement. */
+/* The line that sets the tone before the story starts. It has to read as
+   something the founder said, not as a subheading — hence the quote marks,
+   the attribution, the rule down the side, and a size that stays clear of
+   the h1 above it. */
 .epigraph {
-  margin: 0; padding: 0; border: none;
-  max-width: 720px;
+  margin: 0; padding: 0 0 0 26px;
+  border: none; border-left: 2px solid var(--indigo);
+  max-width: 700px;
+}
+.epigraph p {
+  margin: 0; max-width: none;
   font-family: var(--display);
-  font-size: clamp(22px, 3vw, 36px);
-  line-height: 1.3; letter-spacing: -0.005em;
+  font-size: clamp(20px, 2.5vw, 30px);
+  line-height: 1.34; letter-spacing: -0.005em;
   color: var(--indigo);
+}
+.epigraph cite {
+  display: block; margin-top: 16px;
+  font-family: var(--body); font-style: normal;
+  font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink-3);
 }
 
 .article { max-width: var(--page); margin: 0 auto; padding: 0 var(--gutter) var(--section); }
 /* One measure for every block, so the right edge stays ragged-but-even.
    Without this the paragraphs would cap at the global 62ch while rules and
    blockquotes ran the full 1240. */
-.article > * { max-width: 620px; }
-.article p { max-width: 620px; }
+/* 700px is about 76 characters at 18px — longer than the 66 or so that
+   reads most comfortably, but this is the line length that was asked for. */
+.article > * { max-width: 700px; }
+.article p { max-width: 700px; }
 .article p { font-size: 18px; color: var(--ink-2); line-height: 1.75; }
 .article p strong { color: var(--ink); font-weight: 600; }
 .article blockquote {

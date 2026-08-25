@@ -313,3 +313,29 @@ its column was 520px and the heading broke to three lines where every other
 head takes one or two — so `.logic-grid` is `1.25fr 0.75fr` rather than an
 even split, which brings it to two lines. If the diagram column is ever
 widened again, check that heading first.
+
+## Kickers, labels, flag
+
+The section kickers (`.eyebrow`) are 12px, weight 600, `--ink-3`, on every
+page. The skin-first one used to render at 17.5px in `--ink-2` because
+`.logic-copy p` is (0,1,1) and outranks `.eyebrow` at (0,1,0) — a bare
+element selector inside a class quietly beating a class. It is now
+`.logic-copy p:not(.eyebrow)`. **Watch for this shape whenever a section
+scopes `p` by font-size**; the kicker is a `<p>` too.
+
+Product labels — the hero callouts and the `.spec-list` terms — are weight
+600. Callout 02 reads LAUNCH SIZE / 200 ml · 6.76 fl. oz. rather than
+leading with the volume.
+
+`.flag-sg` is an inline SVG of the Singapore flag in the hero kicker, 20px
+wide. Drawn rather than linked so it needs no asset and no request: the
+crescent is a disc with a second, offset disc cut out of it, and the five
+stars are one `<path>` reused five times around a 2.7-unit circle. The
+kicker is `display:flex`, so the flag is a flex item and takes the row gap;
+`flex:none` stops it being squeezed at narrow widths.
+
+The story-page `.epigraph` carries quote marks, a rule down the side and a
+`<cite>` attribution. Without them it read as a subheading rather than as
+something the founder said. Body measure is 700px — about 76 characters at
+18px, longer than the ~66 that reads most comfortably, but that is the line
+length that was asked for.

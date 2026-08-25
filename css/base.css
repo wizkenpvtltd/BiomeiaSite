@@ -76,6 +76,7 @@ a { color: inherit; }
 .eyebrow {
   font-family: var(--display);
   font-size: 12px;
+  font-weight: 600;
   letter-spacing: 0.19em;
   text-transform: uppercase;
   color: var(--ink-3);
