@@ -378,3 +378,64 @@ epigraph rule. There is no yellow anywhere in the site's own palette, so
 the pack currently reads as a separate system from the page around it.
 Either neutralise the chrome to graphite and let the pack carry the colour,
 or bring yellow into the palette deliberately.
+
+## Colourways — one per branch
+
+Three builds of the same site, differing only in the tube skin. Chrome is
+unchanged across all three, so the comparison isolates the pack colour.
+
+| branch | tube | ink | site |
+|---|---|---|---|
+| `main` | yellow `#FFC700` | `#16171B` | production |
+| `colourway-indigo` | indigo `#333D74` | white | preview |
+| `colourway-burnt-orange` | burnt orange `#B2481B` | white | preview |
+
+(`graphite-accent` is a separate axis — yellow tube with the site accent
+neutralised to graphite. It predates the type-scale fix, so its product
+imagery is the older, smaller-type render.)
+
+Artwork and tooling live in `Biomeia_Label_Templates/colourways/`:
+`generate_wraps.js` emits all three SVGs from one template, and
+`render_colourway.py` renders one colourway given a texture, an output
+directory, a mode (`stills` or `turntable`) and an ink polarity.
+
+**Ink polarity is an argument, not a guess.** A first version inferred it
+from the substrate's luminance with a 0.35 threshold; burnt orange lands at
+0.358 and got classified as dark-ink, which would have rendered white ink
+as the matte value and the substrate as the glossy one — backwards. The
+roughness ramp maps texture brightness to gloss, so it has to know which
+end is ink.
+
+### Type scale
+
+Raised throughout; the original failed three separate references.
+
+| element | was | now | x-height now |
+|---|---|---|---|
+| tagline | 1.65 mm | 2.1 mm | 1.05 mm |
+| product name | 2.90 mm | 3.4 mm | 1.70 mm |
+| claim line | 1.55 mm | 2.0 mm | 1.00 mm |
+| net quantity | 2.20 mm | 3.6 mm | 2.6 mm digit |
+| back-face body | 1.50 mm | 1.7 mm | 0.85 mm |
+
+- The template's own guide note asks for 1.5 mm x-height, needing ~3.0 mm
+  font-size. Nothing met it.
+- EU 1169/2011 sets 1.2 mm x-height for mandatory particulars.
+- India LMPC net-quantity numeral height for a 50-200 ml pack is 2 mm. At
+  2.2 mm font-size the digits were 1.58 mm — under it. The pack carries an
+  IN/LMPC line, so this one bites. Net quantity is now split over two lines
+  because at a compliant size it overran the 35.8 mm face on one.
+
+**The back panel is the real constraint.** A 35.8 mm column holds about 36
+characters at 1.7 mm, so the copy there is abbreviated to fit. The actual
+INCI list will not fit on the tube at a legible size. The full regulatory
+block belongs on the carton (`02_Carton_Dieline_Template.svg`), with the
+tube carrying brand, net content and key warnings. Settle this before
+artwork goes to a printer.
+
+### Ink colour on burnt orange
+
+White, and not marginally: at `#B2481B` white gives 5.5:1 contrast against
+the substrate and black only 3.8:1. The answer flips with the shade — at a
+lighter burnt orange such as `#CC5500` black wins — so if the orange is
+ever brightened, re-check the ink with it.
