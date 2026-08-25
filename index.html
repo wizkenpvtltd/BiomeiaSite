@@ -379,7 +379,10 @@
             <input type="text" name="name" placeholder="Your name" autocomplete="name" required>
             <input type="email" name="email" placeholder="you@email.com" autocomplete="email" required>
           </div>
-          <input class="hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <!-- Honeypot. The name must stay meaningless: called "company" it matched
+               Chrome's ORGANIZATION autofill category, so real visitors had it filled
+               silently and every signup was discarded as a bot. -->
+          <input class="hp" type="text" name="hp_check" tabindex="-1" autocomplete="off" aria-hidden="true">
           <label class="consent">
             <input type="checkbox" name="consent" required>
             <span>I'd like to receive early-access updates from Biomeia. You can unsubscribe anytime. See our <a href="privacy.html">Privacy Policy</a>.</span>
