@@ -170,6 +170,9 @@
 .section.on-bone { background: var(--bone); }
 .section-head { max-width: 640px; margin: 0 0 56px; }
 .section-head.center { margin-left: auto; margin-right: auto; text-align: center; }
+/* h2 is margin-zeroed globally, so a lede sitting under one had no gap at
+   all. Centred that passed unnoticed; left-aligned it reads as cramped. */
+.section-head h2 + .lede { margin-top: 14px; }
 
 /* ------------------------------------------------------------ problem --- */
 /* Names the lived frustration before #logic explains the biology behind it.
@@ -194,9 +197,10 @@
   margin: 0; max-width: none;
   font-size: 15px; line-height: 1.6; color: var(--ink-2);
 }
+/* Left, on the same axis as the heading and the four columns above it —
+   a centred payoff under a left-aligned band reads as an oversight. */
 .problem-close {
-  margin: clamp(40px, 6vw, 68px) auto 0; max-width: 44ch;
-  text-align: center;
+  margin: clamp(40px, 6vw, 68px) 0 0; max-width: 46ch;
   font-family: var(--display);
   font-size: clamp(19px, 2.4vw, 29px); line-height: 1.35;
   color: var(--indigo);

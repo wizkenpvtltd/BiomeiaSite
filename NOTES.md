@@ -249,3 +249,22 @@ is centred in a *white* gap. `.statline` therefore owns its own
 section's top padding for that space, which stopped working the moment the
 next section stopped being white. If a section is ever inserted between
 them, check the line is still centred and still sitting on white.
+
+## Alignment and the menu
+
+**Everything on the home page shares one left edge.** The nav wordmark, the
+hero, and the head of every section (#problem, #logic, #ritual) all sit on
+the 1240px column at `var(--gutter)`. #problem and #ritual used to carry
+`.section-head.center`; both sat over left-aligned content, so the centring
+read as inconsistent rather than deliberate. `.section-head.center` is now
+unused in markup but kept in the stylesheet.
+
+The one deliberate exception is `.statline-lead` — the J-Beauty line is a
+full-width divider statement, and centring is the point of it.
+
+**The menu carries pages only: Our Story, plus the CTA.** "The Science" and
+"The Ritual" were in-page anchors, not pages, and are gone from the nav on
+all four pages. They remain in the footer, which is the sitemap. The
+`.nav-hide` rule went with them — those two links were its only users, so
+the 720px breakpoint that hid them is dead code now and was removed.
+`story.html` marks its own link `aria-current="page"`.
