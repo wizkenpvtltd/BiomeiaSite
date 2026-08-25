@@ -285,3 +285,31 @@ carries no left rule on purpose: at that size the type does the work, and a
 border would make it read as a pull quote lifted from the body rather than
 an opening statement. It is signed once at the end, **Romanshi, Founder,
 Biomeia**, via `.signature`.
+
+## The skin-first diagram
+
+`.logic-visual` is an inline SVG cross-section, drawn as a textbook plate:
+one skin section split down the middle, FACE on the left, SCALP on the
+right, sharing the same epidermis / dermis / subcutis. The face side carries
+shallow follicles, fine vellus hair and small glands; the scalp side deeper
+follicles, terminal hair forming the canopy, and larger, denser sebaceous
+glands. That is the section's argument drawn rather than asserted — same
+skin, more oil glands, under a canopy.
+
+It replaced a pair of abstract circles on an `--indigo-tint` panel. **No
+background box now** — the drawing sits on the page ground the way a figure
+in a printed text does. Two things follow from that:
+
+- The `aspect-ratio` on `.logic-visual` (4/5 in the base rule, 16/10 in the
+  stacked media query) existed only to shape that panel. Both are gone; the
+  plate sets its own 420:470 aspect, and forcing a different one squashes
+  it.
+- Glands connect to their follicle with a short `.duct` stroke. Without it
+  they read as floating blobs, and sebaceous glands genuinely do empty into
+  the follicle they sit on.
+
+Every `h2` on the page is 44px. This section's *looked* larger only because
+its column was 520px and the heading broke to three lines where every other
+head takes one or two — so `.logic-grid` is `1.25fr 0.75fr` rather than an
+even split, which brings it to two lines. If the diagram column is ever
+widened again, check that heading first.

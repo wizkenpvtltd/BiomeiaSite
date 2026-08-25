@@ -169,17 +169,112 @@
           </li>
         </ul>
       </div>
-      <div class="logic-visual reveal" aria-hidden="true">
-        <svg viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="100" cy="60" rx="46" ry="50" stroke="#333D74" stroke-width="1.4"/>
-          <path d="M60 46 C 70 20, 130 20, 140 46" stroke="#333D74" stroke-width="1.4" stroke-linecap="round"/>
-          <path d="M64 40 C 74 16, 126 16, 136 40" stroke="#333D74" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
-          <line x1="100" y1="110" x2="100" y2="150" stroke="#333D74" stroke-width="1" stroke-dasharray="3 4"/>
-          <ellipse cx="100" cy="188" rx="46" ry="50" stroke="#333D74" stroke-width="1.4"/>
-          <path d="M60 174 C 70 148, 130 148, 140 174" stroke="#333D74" stroke-width="1.4" stroke-linecap="round"/>
-          <path d="M64 168 C 74 144, 126 144, 136 168" stroke="#333D74" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
-          <text x="100" y="16" text-anchor="middle" font-family="Jost, sans-serif" font-size="10" letter-spacing="1.5" fill="#5A5F6E">FACE</text>
-          <text x="100" y="234" text-anchor="middle" font-family="Jost, sans-serif" font-size="10" letter-spacing="1.5" fill="#5A5F6E">SCALP</text>
+      <div class="logic-visual reveal" role="img"
+           aria-label="Cross-section diagram comparing facial skin and scalp skin. Both share the same epidermis, dermis and subcutaneous layers. The facial side shows fine vellus hairs and small sebaceous glands; the scalp side shows deeper follicles, terminal hairs forming a canopy, and larger, denser sebaceous glands.">
+        <svg viewBox="0 0 420 470" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <!-- Textbook plate conventions: fine horizontal ruling for the
+                 epidermis, stipple for the dermis, fat lobules below. -->
+            <pattern id="epi" width="6" height="4" patternUnits="userSpaceOnUse">
+              <line x1="0" y1="2" x2="6" y2="2" class="hatch"/>
+            </pattern>
+            <pattern id="derm" width="14" height="14" patternUnits="userSpaceOnUse">
+              <circle cx="3" cy="3" r="0.9" class="stipple"/>
+              <circle cx="10" cy="9" r="0.9" class="stipple"/>
+            </pattern>
+            <clipPath id="face"><rect x="14" y="150" width="192" height="300"/></clipPath>
+            <clipPath id="scalp"><rect x="214" y="150" width="192" height="300"/></clipPath>
+          </defs>
+
+          <!-- ---------------------------------------------- tissue layers -->
+          <rect x="14" y="150" width="392" height="34" fill="url(#epi)"/>
+          <rect x="14" y="184" width="392" height="182" fill="url(#derm)"/>
+          <g class="layer">
+            <path d="M14 150 H406"/>
+            <path d="M14 184 H406"/>
+            <path d="M14 366 H406"/>
+          </g>
+          <g class="fat">
+            <circle cx="42" cy="392" r="15"/><circle cx="80" cy="400" r="12"/>
+            <circle cx="116" cy="390" r="14"/><circle cx="154" cy="401" r="11"/>
+            <circle cx="188" cy="391" r="13"/><circle cx="246" cy="399" r="12"/>
+            <circle cx="284" cy="389" r="14"/><circle cx="320" cy="400" r="11"/>
+            <circle cx="356" cy="391" r="13"/><circle cx="390" cy="399" r="10"/>
+          </g>
+
+          <!-- ------------------------------------------------- FACE side -->
+          <!-- Shallow follicles, fine vellus hair, small glands. -->
+          <g clip-path="url(#face)">
+            <g class="follicle">
+              <path d="M74 150 C 70 180, 66 206, 62 228"/>
+              <path d="M88 150 C 84 180, 80 206, 76 228"/>
+              <ellipse cx="69" cy="234" rx="9" ry="8"/>
+              <path d="M146 150 C 143 176, 140 198, 137 216"/>
+              <path d="M158 150 C 155 176, 152 198, 149 216"/>
+              <ellipse cx="143" cy="222" rx="8" ry="7"/>
+            </g>
+            <!-- Ducts: a sebaceous gland empties into the follicle it sits
+                 on. Drawn so the glands read as attached, not floating. -->
+            <g class="duct">
+              <path d="M80 197 H 90"/>
+              <path d="M152 189 H 161"/>
+            </g>
+            <g class="gland">
+              <circle cx="97" cy="196" r="6.5"/><circle cx="106" cy="203" r="5.5"/>
+              <circle cx="98" cy="208" r="5"/>
+              <circle cx="167" cy="188" r="6"/><circle cx="175" cy="194" r="5"/>
+            </g>
+          </g>
+          <g class="vellus">
+            <path d="M81 150 C 80 138, 79 130, 77 122"/>
+            <path d="M152 150 C 151 140, 150 133, 148 126"/>
+          </g>
+
+          <!-- ------------------------------------------------ SCALP side -->
+          <!-- Same three layers, but deeper follicles, terminal hair forming
+               the canopy, and larger, denser glands. -->
+          <g clip-path="url(#scalp)">
+            <g class="follicle">
+              <path d="M244 150 C 239 196, 234 234, 229 268"/>
+              <path d="M260 150 C 255 196, 250 234, 245 268"/>
+              <ellipse cx="237" cy="276" rx="11" ry="10"/>
+              <path d="M302 150 C 298 198, 294 238, 290 274"/>
+              <path d="M318 150 C 314 198, 310 238, 306 274"/>
+              <ellipse cx="298" cy="282" rx="11" ry="10"/>
+              <path d="M356 150 C 352 194, 348 230, 344 262"/>
+              <path d="M372 150 C 368 194, 364 230, 360 262"/>
+              <ellipse cx="352" cy="270" rx="11" ry="10"/>
+            </g>
+            <g class="duct">
+              <path d="M252 200 H 262"/>
+              <path d="M311 204 H 321"/>
+              <path d="M365 197 H 375"/>
+            </g>
+            <g class="gland">
+              <circle cx="271" cy="199" r="9"/><circle cx="284" cy="208" r="8"/>
+              <circle cx="273" cy="216" r="7.5"/>
+              <circle cx="330" cy="203" r="9"/><circle cx="342" cy="212" r="8"/>
+              <circle cx="331" cy="220" r="7.5"/>
+              <circle cx="384" cy="196" r="8.5"/><circle cx="392" cy="206" r="7"/>
+            </g>
+          </g>
+          <g class="terminal">
+            <path d="M252 150 C 248 104, 242 66, 232 28"/>
+            <path d="M310 150 C 308 100, 304 60, 296 22"/>
+            <path d="M364 150 C 364 102, 362 62, 356 26"/>
+            <path d="M281 150 C 279 108, 275 74, 267 40" class="faint"/>
+            <path d="M338 150 C 338 106, 336 70, 330 34" class="faint"/>
+          </g>
+
+          <!-- ------------------------------------------------- annotation -->
+          <line x1="210" y1="16" x2="210" y2="450" class="divide"/>
+          <g class="side-label">
+            <text x="112" y="14">FACE</text>
+            <text x="308" y="14">SCALP</text>
+          </g>
+          <g class="layer-label">
+            <text x="14" y="466">THE SAME THREE LAYERS</text>
+          </g>
         </svg>
       </div>
     </div>
