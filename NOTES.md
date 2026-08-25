@@ -296,7 +296,7 @@ follicles, terminal hair forming the canopy, and larger, denser sebaceous
 glands. That is the section's argument drawn rather than asserted — same
 skin, more oil glands, under a canopy.
 
-It replaced a pair of abstract circles on an `--indigo-tint` panel. **No
+It replaced a pair of abstract circles on an `--accent-tint` panel. **No
 background box now** — the drawing sits on the page ground the way a figure
 in a printed text does. Two things follow from that:
 
