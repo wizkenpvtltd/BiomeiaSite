@@ -37,7 +37,7 @@ api/callback.js       — GitHub OAuth step 2 (token exchange)
 admin/index.html      — Decap CMS shell
 admin/config.yml      — CMS backend + collections
 robots.txt            — allows all, disallows /admin
-assets/product/        — Blender renders of the 200 ml tube (transparent
+assets/product/        — Blender renders of the 150 ml tube (transparent
                        PNG, shadow-caught)
 assets/video/turntable-white.mp4 — 360° turntable on white, Blender
 ```
@@ -46,7 +46,7 @@ assets/video/turntable-white.mp4 — 360° turntable on white, Blender
 
 All three product images and the turntable video are Cycles renders from
 `04_Blender_Tube_Build.py` (see the Biomeia_Label_Templates project),
-built to the tube geometry solved from the 200 ml declared fill — not
+built to the tube geometry measured off the sample — not
 stock photography. Transparent background with `is_shadow_catcher` on
 the floor, so the tube drops onto the page without a studio backdrop
 fighting the white ground.
@@ -324,7 +324,7 @@ element selector inside a class quietly beating a class. It is now
 scopes `p` by font-size**; the kicker is a `<p>` too.
 
 Product labels — the hero callouts and the `.spec-list` terms — are weight
-600. Callout 02 reads LAUNCH SIZE / 200 ml · 6.76 fl. oz. rather than
+600. Callout 02 reads LAUNCH SIZE / 150 ml · 5.07 fl. oz. rather than
 leading with the volume.
 
 `.flag-sg` is an inline SVG of the Singapore flag in the hero kicker, 20px
@@ -439,3 +439,34 @@ White, and not marginally: at `#B2481B` white gives 5.5:1 contrast against
 the substrate and black only 3.8:1. The answer flips with the shade — at a
 lighter burnt orange such as `#CC5500` black wins — so if the orange is
 ever brightened, re-check the ink with it.
+
+## Pack size is 150 ml, not 200
+
+The original 200 ml came from the brief and everything was reverse-engineered
+from it — including a tube section that was never measured. Measuring the
+sample settled the geometry and showed it cannot hold 200 ml:
+
+| | |
+|---|---|
+| section at the cap junction | 75 x 25, measured |
+| perimeter there | 178.5, which implies an 89.3 crimp against 89 measured |
+| perimeter below the seal | 170.0, so the sleeve is **not** constant-perimeter |
+| internal volume | 148-179 ml depending on taper |
+
+Even with no taper at all the section reaches only 179 ml. 150 ml sits inside
+the range with a normal filling headspace, so the site now reads **150 ml /
+5.07 fl. oz.** throughout. The manufacturer has not confirmed it yet — the
+sample is marked P55277-04 and that reference is with them.
+
+The 3D model, the wrap artwork and the GA drawings were all rebuilt on the
+measured section. Two things follow that are easy to miss:
+
+- The flat faces went from 35.8 to **50.0 mm**, because a 75 x 25 section has
+  much longer flats than the 70 x 34.2 that was assumed. The back-panel copy
+  no longer has to be abbreviated to fit.
+- The developed wrap is really a **trapezoid** — 170.0 across the top, 178.5
+  across the bottom — because the perimeter grows down the body. The texture
+  in `colourways/` is a rectangle at the 178.5 perimeter, which is correct for
+  the UV map since the model samples each ring by its own arc length. **The
+  print artwork still needs re-cutting as a trapezoid** once the manufacturer
+  confirms the developed shape.
