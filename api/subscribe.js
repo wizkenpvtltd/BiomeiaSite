@@ -10,11 +10,11 @@ module.exports = async (req, res) => {
     return;
   }
 
-  const { name, email, market, company } = req.body || {};
+  const { name, email, market, hp_check: honeypot } = req.body || {};
 
   // Honeypot: real visitors never fill this hidden field. Pretend
   // success so bots don't learn to probe further.
-  if (company) {
+  if (honeypot) {
     res.status(200).json({ ok: true });
     return;
   }

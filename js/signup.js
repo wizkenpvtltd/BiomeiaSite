@@ -41,7 +41,7 @@
           name: data.name.trim().slice(0, 200),
           email: data.email.trim().slice(0, 200),
           market: 'Singapore',
-          company: data.company || '', // honeypot
+          hp_check: data.hp_check || '', // honeypot
         }),
       });
       const body = await res.json().catch(() => ({}));
