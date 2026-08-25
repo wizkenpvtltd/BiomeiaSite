@@ -339,3 +339,42 @@ The story-page `.epigraph` carries quote marks, a rule down the side and a
 something the founder said. Body measure is 700px — about 76 characters at
 18px, longer than the ~66 that reads most comfortably, but that is the line
 length that was asked for.
+
+## Colourway: yellow
+
+The live product imagery is the **yellow** colourway, rendered from
+`01b_Tube_Body_Label_YELLOW.svg` -> `03b_Tube_Wrap_Texture_YELLOW.png` in
+the Biomeia_Label_Templates project. Substrate `#FFC700`, ink `#16171B`.
+The original indigo artwork (`01_` / `03_`) is untouched, so switching back
+is a re-render, not a redraw.
+
+**No type on the curves.** In the indigo wrap the origin, importer and
+consumer-care block sat on the far curve panel, rotated to run along the
+tube, and it showed as text bending round the side of the pack. In the
+yellow wrap all of it lives on the back flat face under a MADE IN JAPAN
+heading, and both curve panels are bare substrate.
+
+To fit that, the placeholder regulatory lines were shortened and the
+leading tightened — at the original line counts the back face needed about
+131 mm against 114 mm available. **Before press this panel needs a real
+typesetting pass**, since the actual INCI list will be longer than the
+placeholder standing in for it.
+
+The roughness ramp in `04_Blender_Tube_Build.py` maps texture brightness to
+gloss, tuned for white ink on a dark substrate: bright = glossier, which is
+what silkscreen does. Yellow-on-black inverts the tonality, so the variant
+render scripts **flip the two ramp stops**. Left alone the substrate comes
+out glossier than the print.
+
+Render scripts are in the session scratchpad: `yellow_variant.py` (both
+stills plus the turntable) and `yellow_applicator.py` (the wide applicator
+shot, same camera as `applicator_wide.py`). The angle shot keeps the same
+camera, 38 degree spin and 1400x1750 as the indigo one, so the hero callout
+anchors stay registered.
+
+**Open design question:** the site's accent is indigo `#333D74` throughout —
+nav CTA, kicker dots, callout balloons, problem rules, the skin plate, the
+epigraph rule. There is no yellow anywhere in the site's own palette, so
+the pack currently reads as a separate system from the page around it.
+Either neutralise the chrome to graphite and let the pack carry the colour,
+or bring yellow into the palette deliberately.
