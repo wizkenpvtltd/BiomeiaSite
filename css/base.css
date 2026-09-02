@@ -6,8 +6,11 @@
 
 :root {
   /* ground + ink */
-  --white:        #FFFFFF;
-  --bone:         #F7F6F3;   /* warm off-white section band */
+  /* Not white on this colourway: the pack is. A white tube on a white
+   * page has no left silhouette at all, so the ground is tinted to meet
+   * the renders, which are struck on this exact value. */
+  --white:        #F1EFE9;
+  --bone:         #E9E6DE;   /* still the darker band, one step down */
   --linen:        #EDE9E0;   /* the carton stock, used sparingly */
   --ink:          #14161C;   /* near-black, a touch blue so it sits with indigo */
   --ink-2:        #5A5F6E;
