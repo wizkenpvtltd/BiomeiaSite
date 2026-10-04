@@ -381,3 +381,57 @@
   .signup-copy { max-width: none; }
 }
 
+
+
+/* ------------------------------------------------ section backgrounds --- */
+/* The photograph sits on the section; a scrim pseudo-element fades the page
+   colour across it so body copy keeps its contrast, and the content layer is
+   lifted above both. The scrim direction follows each section's own layout,
+   which is why the two are not the same. */
+.has-bg { position: relative; background-repeat: no-repeat; isolation: isolate; }
+.has-bg::before {
+  content: ""; position: absolute; inset: 0;
+  z-index: 0; pointer-events: none;
+}
+.has-bg > .wrap { position: relative; z-index: 1; }
+
+/* Copy left, skin plate right: hold the left solid and let the camellia come
+   up on the right, between the text column and the plate. */
+.bg-camellia {
+  background-image: url("../assets/images/sections/camellia-1600.webp");
+  background-size: cover; background-position: 88% center;
+}
+.bg-camellia::before {
+  background: linear-gradient(90deg,
+    var(--white) 0%, var(--white) 30%,
+    rgba(255,255,255,0.90) 48%, rgba(255,255,255,0.66) 72%, rgba(255,255,255,0.50) 100%);
+}
+
+/* An opaque white turntable sits on the left here, so a side scrim would just
+   hide the blossom behind it. Vertical instead: the blossom crowns the band
+   and is gone by the time the form starts. */
+.bg-blossom {
+  background-image: url("../assets/images/sections/blossom-1600.webp");
+  background-size: 100% auto; background-position: center top;
+}
+.bg-blossom::before {
+  background:
+    linear-gradient(90deg,
+      var(--white) 0%, var(--white) 34%,
+      rgba(255,255,255,0.72) 50%, rgba(255,255,255,0.10) 78%, rgba(255,255,255,0) 100%),
+    linear-gradient(180deg,
+      rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.62) 30%,
+      var(--white) 56%, var(--white) 100%);
+}
+
+@media (max-width: 1100px) {
+  .bg-camellia { background-image: url("../assets/images/sections/camellia-1000.webp"); }
+  .bg-blossom  { background-image: url("../assets/images/sections/blossom-1000.webp"); }
+}
+
+/* Narrow viewports stack both sections, so a side or top reveal has nowhere
+   to go without sitting under the text. Drop the photographs entirely. */
+@media (max-width: 760px) {
+  .has-bg { background-image: none; }
+  .has-bg::before { display: none; }
+}
