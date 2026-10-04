@@ -1,7 +1,7 @@
 /* A few flowers, falling continuously down the page margins as you scroll.
  *
- * Four blossoms of different sizes and speeds drift down the empty margins beside
- * the text column, two on each side. Each keeps to its own side, so none has to
+ * Four blossoms, and Bima the mascot, of different sizes and speeds drift down the empty margins beside
+ * the text column, on both sides. Each keeps to its own side, so none has to
  * cross any copy, and they fall straight through section changes with no reset.
  * They appear from behind the menu bar and leave off the bottom of the screen.
  *
@@ -36,15 +36,22 @@
     { side:  1, rate: 0.70, mul: 1.00, at: 0.00 },
     { side: -1, rate: 0.55, mul: 0.80, at: 0.50 },
     { side:  1, rate: 0.88, mul: 0.62, at: 0.30 },
-    { side: -1, rate: 0.66, mul: 0.92, at: 0.82 }
+    { side: -1, rate: 0.66, mul: 0.92, at: 0.82 },
+    // Bima, the mascot: falls slowest, rocks instead of spinning, and needs a wider margin
+    // than a petal does (below minLane she would only be a smudge)
+    { side: -1, rate: 0.48, mul: 1.15, at: 0.62, kind: 'mascot', minLane: 44 }
   ];
 
   // Five notched petals, a blush gradient, a gold centre. Inline so it costs no request;
   // ids are numbered because several of these share one page.
-  function build(i) {
+  function build(i, kind) {
     var el = document.createElement('div');
-    el.className = 'falling-flower' + (i === 0 ? ' ff-lead' : '');
+    el.className = 'falling-flower' + (i === 0 ? ' ff-lead' : '') + (kind === 'mascot' ? ' ff-mascot' : '');
     el.setAttribute('aria-hidden', 'true');
+    if (kind === 'mascot') {
+      el.innerHTML = '<img src="/assets/images/bima-fall.png" alt="" width="83" height="112" decoding="async">';
+      return el;
+    }
     el.innerHTML =
       '<svg viewBox="0 0 100 100" width="100%" height="100%">' +
       '<defs><radialGradient id="ffp' + i + '" cx="50%" cy="80%" r="75%">' +
@@ -63,7 +70,8 @@
   }
 
   var flowers = specs.map(function (sp, i) {
-    return { el: build(i), idx: i, side: sp.side, rate: sp.rate, mul: sp.mul, at: sp.at, size: 0, box: 0, phase: 0, span: 1, top: 0 };
+    return { el: build(i, sp.kind), idx: i, kind: sp.kind, minLane: sp.minLane || 0, side: sp.side, rate: sp.rate, mul: sp.mul, at: sp.at,
+             size: 0, box: 0, phase: 0, span: 1, top: 0 };
   });
   var lead = flowers[0];
 
@@ -157,6 +165,11 @@
     var rz = p * 340 + Math.sin(p * TAU * 3) * 22 + f.idx * 70;
     var rx = Math.sin(p * TAU * 2.6 + 1) * 38;
     var ry = Math.sin(p * TAU * 1.7 + f.idx) * 52;
+    if (f.kind === 'mascot') {                        // she rocks side to side and turns a little; she does not tumble
+      rz = Math.sin(p * TAU * 2.2 + f.idx) * 13;
+      rx = 0;
+      ry = Math.sin(p * TAU * 1.3) * 16;
+    }
     place(f, x, y, rx, ry, rz, 0.95 * visible);
   }
 
@@ -203,6 +216,7 @@
     var others = landing ? 1 - clamp01((s - lastA) / (vh * 0.3)) : 1;   // the rest drift away as the lead heads for the form
 
     flowers.forEach(function (f) {
+      if (f.minLane && lane < f.minLane) { f.el.style.opacity = '0'; return; }
       if (f === lead && landing) renderLanding(s, lastA);
       else renderFree(f, s, f === lead ? arrive : arrive * others);
     });
