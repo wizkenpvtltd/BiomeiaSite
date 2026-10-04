@@ -219,55 +219,11 @@ a { color: inherit; }
 .reveal.in { opacity: 1; transform: none; transition: opacity 0.7s ease, transform 0.7s ease; }
 @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } }
 
-/* ------------------------------------------------------------- cursor --- */
-/* Bima as the pointer. The hotspot is the tip of the raised hand, scaled from where
-   it was measured on the artwork (5,10 on the 21x28 resting image, 6,12 on the 24x32 one)
-   -- a cursor whose click point is a guess is a cursor that misses buttons. The 2x
-   images are for high-DPI screens; hotspot coordinates stay in 1x CSS pixels.
-
-   KEEP EVERY CURSOR IMAGE AT 32px OR SMALLER, in both dimensions. Chrome (and Edge)
-   silently drop a custom cursor bigger than 32x32 whenever its box would cross the edge
-   of the page area -- within a hotspot's distance of the top, bottom or right edge,
-   which includes the scrollbar and, on a short laptop screen, a large share of the
-   page. The pointer then flips back to the plain arrow, so the mascot seems to work
-   and then vanish. The earlier 40px/56px images did exactly that, on this site and on
-   any other that uses a big cursor. At 32px or under there is no such rule.
-   The resting image is 28px tall and the one over clickable things 32px, so the step
-   up that says "this is live" is smaller than it was but still there.
-   (Regenerate from assets/mascot/BimaNoBG.png, keeping those heights.)
-
-   Any device with a mouse or trackpad (any-pointer: fine, or any-hover). A touchscreen
-   laptop often reports touch as its PRIMARY input, so gating on (pointer: fine) alone
-   switched the mascot off there while it showed on a desktop monitor. Phones and tablets
-   with no mouse match neither, and touch has no cursor to dress up anyway.
-
-   Over clickable things she steps up a size (28px to 32px), and that change is the cue
-   that replaces the hand the native pointer would have given. Text fields keep
-   the native I-beam: aiming a text caret with a cartoon character is a real
-   usability cost, not a style choice. A disabled control keeps the resting
-   mascot -- the signup button goes disabled on SUCCESS ("Added"), and a
-   not-allowed cursor over a success message would read as hostile.
-
-   .btn is listed explicitly: it sets its own cursor at class specificity, which
-   outranks a bare element selector, so without it the main call to action
-   would have kept the plain hand. */
-/* A class selector that sets `cursor` on anything clickable outranks the bare element
-   selectors below and quietly brings back the plain hand: .btn did it, then the
-   accordion's .rc-toggle did. Do not set `cursor: pointer` on a clickable element;
-   add its selector to the list below, or use var(--cursor-live). */
-@media (any-hover: hover), (any-pointer: fine) {
-  :root {
-    --cursor-rest:  image-set(url("../assets/cursor/bima-rest-1x.png") 1x, url("../assets/cursor/bima-rest-2x.png") 2x) 5 10, auto;
-    --cursor-live:  image-set(url("../assets/cursor/bima-live-1x.png") 1x, url("../assets/cursor/bima-live-2x.png") 2x) 6 12, pointer;
-  }
-  html, body { cursor: var(--cursor-rest); }
-  a, button, summary, label, select, .btn,
-  [role="button"], input[type="checkbox"], input[type="radio"], input[type="submit"] {
-    cursor: var(--cursor-live);
-  }
-  input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]), textarea { cursor: text; }
-  button:disabled, input:disabled, .btn[disabled] { cursor: var(--cursor-rest); }
-}
+/* ------------------------------------------------------------- clickable --- */
+/* The plain hand over anything clickable. Browsers already do this for links; the rest
+   (buttons, labels, accordion headers) are listed so none is left with the arrow. */
+button:not(:disabled), summary, [role="button"], label, select,
+input[type="checkbox"], input[type="radio"], input[type="submit"] { cursor: pointer; }
 
 /* ------------------------------------------------------------ falling flower --- */
 /* One flower, positioned by js/flower.js. Fixed, never catches the pointer, and
