@@ -62,9 +62,14 @@
          viewport width — an absolutely-positioned overlay drifts as soon as
          the container aspect changes. -->
     <div class="hero-media">
+      <div class="hero-stage">
+        <video class="hero-video" muted loop playsinline preload="metadata"
+               poster="assets/product/tube-angle.png"
+               aria-label="The Biomeia tube shown in each of its five colourways in turn">
+          <source src="assets/video/hero-carousel.mp4" type="video/mp4">
+        </video>
       <svg class="hero-callouts" viewBox="0 0 560 470" role="img"
            aria-label="Biomeia Pre-Wash Scalp Cleansing Oil, 150 ml tube with a built-in multi-port comb applicator and ON/OFF dispensing control">
-        <image href="assets/product/tube-angle.png" x="200" y="12" width="340" height="425"/>
 
         <!-- Leaders elbow out horizontally from the balloon before angling
              to the anchor, so the label column stays on an even rhythm while
@@ -108,11 +113,7 @@
           <text x="176" y="412">Comb applicator</text>
         </g>
       </svg>
-      <!-- Below 900px the callout labels would scale past readable, so the
-           SVG gives way to the plain product image and this spec list, which
-           carries the same four details in the same 01-04 order. Same image
-           file as the SVG uses, so no extra request. -->
-      <img class="hero-photo" src="assets/product/tube-angle.png" alt="Biomeia Pre-Wash Scalp Cleansing Oil, 150 ml tube with a built-in applicator" width="1400" height="1750">
+      </div>
       <dl class="spec-list">
         <div><dt><span class="spec-ref">01</span>100% Waterless</dt><dd>No water fillers</dd></div>
         <div><dt><span class="spec-ref">02</span>Launch size</dt><dd>150 ml · 5.07 fl. oz.</dd></div>
@@ -443,6 +444,7 @@
   </div>
 </footer>
 
+<script src="js/hero.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/reveal.js"></script>
 <script src="js/signup.js"></script>

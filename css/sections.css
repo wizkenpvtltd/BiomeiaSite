@@ -88,16 +88,18 @@
   text-anchor: end;
 }
 
-/* The stacked-layout stand-in for the annotated SVG: the plain product
-   image, with the spec list directly beneath it standing in for the
-   callouts. Both live inside .hero-media so the specs stay attached to the
-   product rather than drifting into a band of their own. */
-.hero-photo {
-  display: none;
-  width: auto; height: auto;
-  max-height: clamp(280px, 62vw, 440px);
-  margin: 0 auto;
+/* The carousel sits exactly where the product <image> used to, inside the
+   callout SVG's coordinate space: rect x=200 y=12 w=340 h=425 of a 560x470
+   viewBox. Held as percentages so it tracks the SVG at every width -- a
+   fixed offset here would shear the leader lines off the product. */
+.hero-stage { position: relative; width: 100%; }
+.hero-video {
+  position: absolute;
+  left: 35.7143%; top: 2.5532%;
+  width: 60.7143%; height: 90.4255%;
+  object-fit: contain;
 }
+.hero-callouts { position: relative; z-index: 1; }
 
 /* ---------------------------------------------------------- spec list --- */
 /* The narrow-viewport stand-in for the callouts: the same four specs in the
@@ -111,7 +113,12 @@
   .hero-media { order: -1; margin-bottom: clamp(20px, 4vw, 34px); }
   .hero-copy { max-width: none; }
   .hero-callouts { display: none; }
-  .hero-photo { display: block; }
+  .hero-video {
+    position: static;
+    width: auto; max-width: 100%; height: auto;
+    max-height: clamp(280px, 62vw, 440px);
+    margin: 0 auto; display: block;
+  }
 
   .spec-list {
     display: grid; grid-template-columns: repeat(4, 1fr);
