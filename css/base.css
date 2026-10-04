@@ -225,8 +225,10 @@ a { color: inherit; }
    is a guess is a cursor that misses buttons. The 2x images are for high-DPI
    screens; hotspot coordinates stay in 1x CSS pixels.
 
-   Fine pointers only: touch has no cursor, and a coarse-pointer device that
-   reports hover would get a mascot it cannot meaningfully aim.
+   Any device with a mouse or trackpad (any-pointer: fine, or any-hover). A touchscreen
+   laptop often reports touch as its PRIMARY input, so gating on (pointer: fine) alone
+   switched the mascot off there while it showed on a desktop monitor. Phones and tablets
+   with no mouse match neither, and touch has no cursor to dress up anyway.
 
    Over clickable things she steps up to 56px, so the size change is the cue
    that replaces the hand the native pointer would have given. Text fields keep
@@ -242,7 +244,7 @@ a { color: inherit; }
    selectors below and quietly brings back the plain hand: .btn did it, then the
    accordion's .rc-toggle did. Do not set `cursor: pointer` on a clickable element;
    add its selector to the list below, or use var(--cursor-live). */
-@media (hover: hover) and (pointer: fine) {
+@media (any-hover: hover), (any-pointer: fine) {
   :root {
     --cursor-rest:  image-set(url("../assets/cursor/bima-40.png") 1x, url("../assets/cursor/bima-80.png") 2x) 7 15, auto;
     --cursor-live:  image-set(url("../assets/cursor/bima-56.png") 1x, url("../assets/cursor/bima-112.png") 2x) 10 20, pointer;
