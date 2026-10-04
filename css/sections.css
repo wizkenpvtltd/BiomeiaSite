@@ -183,7 +183,12 @@
 
 /* ------------------------------------------------------------- section --- */
 .section { padding: var(--section) 0; }
-.section.on-bone { background: var(--bone); }
+.section.on-bone {
+  /* Fade to white at both edges so a bone band melts into its white neighbours
+     instead of ending in a hard line. */
+  --fade: clamp(70px, 9vw, 140px);
+  background: linear-gradient(180deg, var(--white) 0, var(--bone) var(--fade), var(--bone) calc(100% - var(--fade)), var(--white) 100%);
+}
 .section-head { max-width: 640px; margin: 0 0 56px; }
 .section-head.center { margin-left: auto; margin-right: auto; text-align: center; }
 /* h2 is margin-zeroed globally, so a lede sitting under one had no gap at
@@ -478,7 +483,6 @@
    would frame the product in a box the rest of the page never uses. */
 .signup-section {
   background: var(--white);
-  border-top: 1px solid var(--rule);
   padding: clamp(64px, 9vw, 120px) 0;
 }
 .signup-grid {
@@ -510,54 +514,133 @@
 
 
 /* ------------------------------------------------ section backgrounds --- */
-/* The photograph sits on the section; a scrim pseudo-element fades the page
-   colour across it so body copy keeps its contrast, and the content layer is
-   lifted above both. The scrim direction follows each section's own layout,
-   which is why the two are not the same. */
-.has-bg { position: relative; background-repeat: no-repeat; isolation: isolate; }
+/* One thread of spring down the page: first buds -> camellia opening -> open
+   meadow -> unfurling fern -> blossom. Each section carries its photograph in
+   a pseudo-element, masked to dissolve at the section's own top and bottom,
+   with a second pseudo-element as the scrim that keeps copy readable. The
+   scrim direction follows each section's layout, so they differ. */
+.has-bg { position: relative; isolation: isolate; }
+.has-bg::before, .has-bg::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; }
 .has-bg::before {
-  content: ""; position: absolute; inset: 0;
-  z-index: 0; pointer-events: none;
+  background-image: var(--bg-img); background-repeat: no-repeat;
+  background-size: var(--bg-size, cover); background-position: var(--bg-pos, center);
+  opacity: var(--bg-op, 1);
+  --bg-fade: 22%;
+  -webkit-mask-image: var(--bg-mask, linear-gradient(180deg, transparent 0%, #000 var(--bg-fade), #000 calc(100% - var(--bg-fade)), transparent 100%));
+          mask-image: var(--bg-mask, linear-gradient(180deg, transparent 0%, #000 var(--bg-fade), #000 calc(100% - var(--bg-fade)), transparent 100%));
 }
-.has-bg > .wrap { position: relative; z-index: 1; }
+.has-bg::after { background: var(--bg-scrim, none); }
+/* No z-index on the content below, deliberately: it is not needed, because the
+   photograph and scrim are z-index -1 and already paint under everything, and
+   adding one would only create a stacking context for no reason. */
+.has-bg > .wrap, .has-bg > .hero { position: relative; }
+/* The hero is a 1240px box, so the picture hangs from a full-width band around
+   it. Only a thin canopy of blossom across the very top, gone before the eyebrow:
+   the product videos were rendered on an opaque white ground, and multiplying
+   them into a picture made the tube look see-through where a branch crossed it
+   (the white vanished, but so did the product's solidity). Keeping the picture
+   off that part of the page is the honest fix. */
+.hero-band { background: var(--white); }
+.hero-band .hero { background: transparent; }
+.bg-hero {
+  --bg-img: url("../assets/images/flow/hero-1600.webp");
+  --bg-pos: center top;
+  --bg-op: 0.9;
+  --bg-mask: linear-gradient(180deg, #000 0%, #000 9%, transparent 27%);
+}
 
-/* Copy left, skin plate right: hold the left solid and let the camellia come
-   up on the right, between the text column and the plate. */
-.bg-camellia {
-  background-image: url("../assets/images/sections/camellia-1600.webp");
-  background-size: cover; background-position: 88% center;
+/* The problem band is bone. Buds sit top right beside the heading; a vertical
+   scrim lays bone back over the lower half, where the four columns of copy are. */
+.bg-buds {
+  --bg-img: url("../assets/images/flow/buds-1600.webp");
+  --bg-pos: right top;
+  --bg-scrim:
+    linear-gradient(90deg, rgba(247,246,243,1) 0%, rgba(247,246,243,0.88) 30%, rgba(247,246,243,0.30) 64%, rgba(247,246,243,0.18) 100%),
+    linear-gradient(180deg, rgba(247,246,243,0) 0%, rgba(247,246,243,0) 24%, rgba(247,246,243,0.62) 58%, rgba(247,246,243,0.74) 100%);
 }
-.bg-camellia::before {
-  background: linear-gradient(90deg,
+
+/* Copy left, skin plate right: hold the left solid and let the camellia come up
+   on the right, between the text column and the plate. */
+.bg-camellia {
+  --bg-img: url("../assets/images/sections/camellia-1600.webp");
+  --bg-pos: 88% center;
+  --bg-scrim: linear-gradient(90deg,
     var(--white) 0%, var(--white) 30%,
     rgba(255,255,255,0.90) 48%, rgba(255,255,255,0.66) 72%, rgba(255,255,255,0.50) 100%);
 }
 
-/* An opaque white turntable sits on the left here, so a side scrim would just
-   hide the blossom behind it. Vertical instead: the blossom crowns the band
-   and is gone by the time the form starts. */
-.bg-blossom {
-  background-image: url("../assets/images/sections/blossom-1600.webp");
-  background-size: 100% auto; background-position: center top;
+/* An open meadow behind the white accordion cards. Its misty upper third is
+   what sits behind the heading, so copy there needs almost no help. */
+.bg-meadow {
+  --bg-img: url("../assets/images/flow/meadow-1600.webp");
+  --bg-pos: center bottom;
+  --bg-op: 0.85;
+  --bg-scrim: linear-gradient(180deg, rgba(247,246,243,0.40) 0%, rgba(247,246,243,0.10) 100%);
 }
-.bg-blossom::before {
-  background:
+
+/* Fern fiddleheads on the left, behind the applicator render. The copy is on
+   the right, so the scrim is solid there. */
+.bg-fern {
+  --bg-img: url("../assets/images/flow/fern-1600.webp");
+  --bg-pos: left center;
+  --bg-scrim: linear-gradient(270deg,
+    var(--white) 0%, var(--white) 34%,
+    rgba(255,255,255,0.58) 58%, rgba(255,255,255,0) 82%);
+}
+
+/* The turntable sits on the left, so a side reveal would hide the blossom
+   behind it. It crowns the band instead and is gone by the time the form starts. */
+.bg-blossom {
+  --bg-img: url("../assets/images/sections/blossom-1600.webp");
+  --bg-size: 100% auto; --bg-pos: center top;
+  --bg-fade: 14%;
+  /* solid white to 47%: the turntable ends at ~44% and is an opaque white
+     rectangle, so any picture showing under its edge reads as a faint box */
+  --bg-scrim:
     linear-gradient(90deg,
-      var(--white) 0%, var(--white) 34%,
-      rgba(255,255,255,0.72) 50%, rgba(255,255,255,0.10) 78%, rgba(255,255,255,0) 100%),
+      var(--white) 0%, var(--white) 47%,
+      rgba(255,255,255,0.74) 58%, rgba(255,255,255,0.10) 80%, rgba(255,255,255,0) 100%),
     linear-gradient(180deg,
       rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.62) 30%,
       var(--white) 56%, var(--white) 100%);
 }
 
-@media (max-width: 1100px) {
-  .bg-camellia { background-image: url("../assets/images/sections/camellia-1000.webp"); }
-  .bg-blossom  { background-image: url("../assets/images/sections/blossom-1000.webp"); }
+/* The Our Story page has a narrow centred hero, so the first buds hang from the
+   top of <main>, full width, and dissolve before the article begins. */
+.page-flow { position: relative; isolation: isolate; }
+.page-flow::before {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  inset: 0 0 auto 0; height: clamp(420px, 56vw, 640px);
+  background: url("../assets/images/flow/buds-1600.webp") right top / cover no-repeat;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 40%, transparent 100%);
+          mask-image: linear-gradient(180deg, #000 0%, #000 40%, transparent 100%);
+}
+.page-flow::after {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  inset: 0 0 auto 0; height: clamp(420px, 56vw, 640px);
+  background: linear-gradient(90deg, var(--white) 0%, rgba(255,255,255,0.86) 34%, rgba(255,255,255,0.20) 72%, rgba(255,255,255,0.10) 100%);
 }
 
-/* Narrow viewports stack both sections, so a side or top reveal has nowhere
-   to go without sitting under the text. Drop the photographs entirely. */
+@media (max-width: 1100px) {
+  .bg-hero     { --bg-img: url("../assets/images/flow/hero-1000.webp"); }
+  .bg-buds     { --bg-img: url("../assets/images/flow/buds-1000.webp"); }
+  .bg-camellia { --bg-img: url("../assets/images/sections/camellia-1000.webp"); }
+  .bg-meadow   { --bg-img: url("../assets/images/flow/meadow-1000.webp"); }
+  .bg-fern     { --bg-img: url("../assets/images/flow/fern-1000.webp"); }
+  .bg-blossom  { --bg-img: url("../assets/images/sections/blossom-1000.webp"); }
+  .page-flow::before { background-image: url("../assets/images/flow/buds-1000.webp"); }
+}
+
+/* On a phone the sections stack and copy runs the full width, so there is no
+   clear side to reveal a picture on. Keep the thread but much fainter, rather
+   than dropping it: dropping it breaks the flow exactly where most people read. */
 @media (max-width: 760px) {
-  .has-bg { background-image: none; }
-  .has-bg::before { display: none; }
+  .has-bg::before { opacity: calc(var(--bg-op, 1) * 0.42); }
+  .has-bg::after { background: none; }
+  /* The turntable stacks ABOVE the form here and is an opaque white rectangle, so
+     a picture behind it shows as a pale box. Put the blossom behind the form at the
+     bottom of the band instead, and leave the video on clean white. */
+  .bg-blossom { --bg-pos: center bottom; --bg-size: 100% auto; }
+  .page-flow::before { opacity: 0.5; }
+  .page-flow::after { display: none; }
 }

@@ -191,8 +191,8 @@ a { color: inherit; }
 
 /* -------------------------------------------------------------- footer --- */
 .footer {
-  background: var(--bone);
-  border-top: 1px solid var(--rule);
+  /* fades up from white so the footer does not start on a hairline */
+  background: linear-gradient(180deg, var(--white) 0, var(--bone) 90px);
   padding: clamp(48px, 7vw, 80px) 0 40px;
   margin-top: var(--section);
 }
