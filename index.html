@@ -11,6 +11,8 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Karla:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/sections.css">
+  <!-- .reveal starts at opacity 0 and only script reveals it; without JS the headings, copy and the ritual would stay invisible -->
+  <noscript><style>.reveal { opacity: 1 !important; transform: none !important; }</style></noscript>
 </head>
 <body>
 
@@ -307,37 +309,33 @@
         <h2>Five steps, once or twice a week</h2>
         <p class="lede">Before you shampoo — not instead of it.</p>
       </div>
-        <div class="ritual-track">
-        <div class="ritual-stage">
-        <ol class="ritual-list">
-          <li class="reveal ritual-1">
+        <ol class="ritual-list reveal">
+          <li class="ritual-1">
             <span class="ritual-bg" aria-hidden="true"></span>
-            <div><h4>Prepare</h4>
-            <p>Part dry, unwashed hair into sections.</p></div>
+            <h4 class="rc-head"><span class="rc-no">01</span><span class="rc-title">Prepare</span></h4>
+            <div class="rc-body"><div class="rc-body-in"><p>Part dry, unwashed hair into sections.</p></div></div>
           </li>
-          <li class="reveal ritual-2">
+          <li class="ritual-2">
             <span class="ritual-bg" aria-hidden="true"></span>
-            <div><h4>Apply</h4>
-            <p>Twist the applicator to ON, then glide the comb tip along the scalp — the multi-port head dispenses oil onto skin, not onto hair.</p></div>
+            <h4 class="rc-head"><span class="rc-no">02</span><span class="rc-title">Apply</span></h4>
+            <div class="rc-body"><div class="rc-body-in"><p>Twist the applicator to ON, then glide the comb tip along the scalp — the multi-port head dispenses oil onto skin, not onto hair.</p></div></div>
           </li>
-          <li class="reveal ritual-3">
+          <li class="ritual-3">
             <span class="ritual-bg" aria-hidden="true"></span>
-            <div><h4>Activate</h4>
-            <p>Massage gently with fingertips for 1–3 minutes to dissolve buildup.</p></div>
+            <h4 class="rc-head"><span class="rc-no">03</span><span class="rc-title">Activate</span></h4>
+            <div class="rc-body"><div class="rc-body-in"><p>Massage gently with fingertips for 1–3 minutes to dissolve buildup.</p></div></div>
           </li>
-          <li class="reveal ritual-4">
+          <li class="ritual-4">
             <span class="ritual-bg" aria-hidden="true"></span>
-            <div><h4>Rest</h4>
-            <p>Leave on for 10–15 minutes.</p></div>
+            <h4 class="rc-head"><span class="rc-no">04</span><span class="rc-title">Rest</span></h4>
+            <div class="rc-body"><div class="rc-body-in"><p>Leave on for 10–15 minutes.</p></div></div>
           </li>
-          <li class="reveal ritual-5">
+          <li class="ritual-5">
             <span class="ritual-bg" aria-hidden="true"></span>
-            <div><h4>Rinse</h4>
-            <p>Add water to emulsify into a milky rinse, then follow with a mild shampoo. Twist back to OFF before storing.</p></div>
+            <h4 class="rc-head"><span class="rc-no">05</span><span class="rc-title">Rinse</span></h4>
+            <div class="rc-body"><div class="rc-body-in"><p>Add water to emulsify into a milky rinse, then follow with a mild shampoo. Twist back to OFF before storing.</p></div></div>
           </li>
         </ol>
-        </div>
-      </div>
     </div>
   </section>
 

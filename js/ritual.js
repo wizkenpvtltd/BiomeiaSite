@@ -1,115 +1,83 @@
-/* The Pre-Wash Ritual as a deck.
+/* The Pre-Wash Ritual as an accordion.
  *
- * Five cards pin in a sticky stage and are positioned by scroll progress. At
- * any moment the current card is whole, earlier cards have collapsed to a
- * number-and-title strip stacked above it, and later cards show only their top
- * edges, fanned out below. Scrolling slides the next card up over the current
- * one, and the current one drops into the strip stack.
+ * The markup is a plain list of five full cards. This turns it into an
+ * accordion: one step open at a time, the rest collapsed to labelled strips.
+ * Without JavaScript every card simply stays open, so nothing is lost.
  *
- * It is an enhancement: wide screens without reduced motion only. Anywhere else
- * the section stays the plain list of cards (which rise in via reveal.js), and
- * if this file never runs, so does the list.
+ * Each heading is wrapped in a real <button> (the WAI-ARIA accordion pattern),
+ * with aria-expanded and aria-controls. The open step cannot be closed: in the
+ * wide layout that would leave five strips and nothing to read.
  */
 (function () {
-  var track = document.querySelector('.ritual-track');
-  if (!track) return;
-  var stage = track.querySelector('.ritual-stage');
-  var list = stage.querySelector('.ritual-list');
-  var cards = Array.prototype.slice.call(list.children);
-  var N = cards.length;
-  if (N < 2) return;
+  var list = document.querySelector('.ritual-list');
+  if (!list) return;
+  var items = Array.prototype.slice.call(list.children);
+  if (items.length < 2) return;
 
-  var STRIP = 48;        // height of a collapsed card: its number and title
-  var PEEK0 = 10;        // gap between the current card and the first card below
-  var PEEK_GAP = 12;     // how much of each further card's top edge shows
-  var SCALE_STEP = 0.028;// each card further down is a touch narrower: a deck, not a list
+  var buttons = [];
+  var current = 0;
 
-  var mq = window.matchMedia('(min-width: 761px) and (prefers-reduced-motion: no-preference)');
-  var on = false, H = 0, step = 0, stackTop = 0, queued = false;
+  items.forEach(function (li, i) {
+    var head = li.querySelector('.rc-head');
+    var body = li.querySelector('.rc-body');
+    var no = li.querySelector('.rc-no');
+    var title = li.querySelector('.rc-title');
+    if (!head || !body || !no || !title) return;
 
-  // Resting position of card i when card c is the current one. Cards up to and
-  // including c are in their strip slots; the rest hang below the current card.
-  function Y(i, c) { return i <= c ? i * STRIP : c * STRIP + H + PEEK0 + (i - c - 1) * PEEK_GAP; }
-  function S(i, c) { return i <= c ? 1 : 1 - SCALE_STEP * (i - c); }
-  // How much of card i shows when card c is current: all of it once it has
-  // been reached, otherwise just a top-edge sliver. Without this the last card,
-  // which sits on top of the sliver cards before it, shows its whole body below
-  // the current one -- a card, where a glimpse of an edge was wanted.
-  function Vis(i, c) { return i <= c ? H : PEEK_GAP; }
-  function clamp01(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
+    // the real control: the heading's own contents, moved into a button
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'rc-toggle';
+    btn.id = 'rc-t-' + i;
+    btn.setAttribute('aria-controls', 'rc-b-' + i);
+    while (head.firstChild) btn.appendChild(head.firstChild);
+    var chev = document.createElement('span');
+    chev.className = 'rc-chev';
+    chev.setAttribute('aria-hidden', 'true');
+    btn.appendChild(chev);
+    head.appendChild(btn);
 
-  function lerp(a, b, t) { return a + (b - a) * t; }
+    body.id = 'rc-b-' + i;
+    body.setAttribute('role', 'region');
+    body.setAttribute('aria-labelledby', btn.id);
 
-  function measure() {
-    H = cards[0].offsetHeight;
-    var stageH = H + (N - 1) * STRIP + 24;
-    stage.style.height = stageH + 'px';
-    list.style.height = stageH + 'px';
-    // how far you scroll to move from one card to the next
-    step = Math.max(360, Math.round(window.innerHeight * 0.5));
-    track.style.height = (stageH + (N - 1) * step) + 'px';
-    // Centre the pinned deck in the viewport rather than hanging it from the top:
-    // the deck is only about half a screen tall, so on a tall window a fixed top
-    // offset leaves a large empty band below it for the whole length of the scroll.
-    // 96px is the floor so it never slides under the nav.
-    stackTop = Math.max(96, Math.round((window.innerHeight - stageH) / 2));
-    stage.style.top = stackTop + 'px';
+    // the rotated label shown when this step is collapsed; decorative, because
+    // the button already carries the accessible name
+    var tab = document.createElement('span');
+    tab.className = 'rc-tab';
+    tab.setAttribute('aria-hidden', 'true');
+    tab.innerHTML = '<span class="rc-no"></span><span class="rc-title"></span>';
+    tab.firstChild.textContent = no.textContent;
+    tab.lastChild.textContent = title.textContent;
+    li.insertBefore(tab, head);
+
+    btn.addEventListener('click', function () { open(i); });
+    btn.addEventListener('keydown', function (e) { onKey(e, i); });
+    buttons.push(btn);
+  });
+
+  function open(i) {
+    current = i;
+    items.forEach(function (li, k) {
+      var on = k === i;
+      li.classList.toggle('is-open', on);
+      if (buttons[k]) buttons[k].setAttribute('aria-expanded', on ? 'true' : 'false');
+    });
   }
 
-  function render() {
-    queued = false;
-    if (!on) return;
-    var p = (stackTop - track.getBoundingClientRect().top) / step;
-    p = Math.min(N - 1, Math.max(0, p));
-    var a = Math.min(N - 2, Math.floor(p));      // the card we are leaving
-    var f = p - a;
-    var e = f * f * (3 - 2 * f);                 // ease the hand-over
-    for (var i = 0; i < N; i++) {
-      var y = lerp(Y(i, a), Y(i, a + 1), e);
-      var s = lerp(S(i, a), S(i, a + 1), e);
-      cards[i].style.transform = 'translate3d(0,' + y.toFixed(2) + 'px,0) scale(' + s.toFixed(4) + ')';
-      // the card arriving unfurls from an edge to its full height as it rises;
-      // the ones still waiting stay slivers
-      var v = (i === a + 1)
-        ? lerp(PEEK_GAP, H, clamp01(f * 3))
-        : lerp(Vis(i, a), Vis(i, a + 1), e);
-      // negative insets leave the shadow showing on top and sides; only the
-      // bottom is cut
-      cards[i].style.clipPath = v >= H - 0.5 ? "" : "inset(-40px -40px " + (H - v).toFixed(1) + "px -40px)";
-      cards[i].style.zIndex = String(i + 1);     // later cards slide over earlier ones
-    }
-    track.setAttribute('data-step', String(Math.round(p) + 1));
+  // arrows move between the headings, Home/End jump; Enter and Space are the
+  // button's own behaviour
+  function onKey(e, i) {
+    var n = buttons.length, to = -1;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') to = (i + 1) % n;
+    else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') to = (i - 1 + n) % n;
+    else if (e.key === 'Home') to = 0;
+    else if (e.key === 'End') to = n - 1;
+    if (to < 0) return;
+    e.preventDefault();
+    buttons[to].focus();
   }
 
-  function request() { if (!queued) { queued = true; window.requestAnimationFrame(render); } }
-
-  function enable() {
-    if (on) return;
-    on = true;
-    cards.forEach(function (c) { c.classList.remove('reveal'); c.classList.add('in'); });
-    track.classList.add('is-stack');
-    measure();
-    render();
-    window.addEventListener('scroll', request, { passive: true });
-    window.addEventListener('resize', onResize);
-  }
-
-  function disable() {
-    if (!on) return;
-    on = false;
-    track.classList.remove('is-stack');
-    track.style.height = stage.style.height = list.style.height = stage.style.top = '';
-    cards.forEach(function (c) { c.style.transform = ''; c.style.zIndex = ''; c.style.clipPath = ''; });
-    track.removeAttribute('data-step');
-    window.removeEventListener('scroll', request);
-    window.removeEventListener('resize', onResize);
-  }
-
-  function onResize() { measure(); request(); }
-
-  function evaluate() { if (mq.matches) enable(); else disable(); }
-
-  evaluate();
-  if (mq.addEventListener) mq.addEventListener('change', evaluate);
-  else if (mq.addListener) mq.addListener(evaluate);
+  list.classList.add('is-acc');
+  open(0);
 })();

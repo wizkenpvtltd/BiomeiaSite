@@ -299,41 +299,34 @@
 }
 
 /* ------------------------------------------------------------- ritual --- */
-/* Five cards. Each rises as it enters view and carries a photograph that
-   dissolves into the card at every edge -- a blurred copy wider and softer, a
-   sharp copy inside it, so there is never a hard line where picture meets
-   card. The photographs keep their subject on the right and stay pale on the
-   left, which is where the copy sits. */
+/* A plain list of five full cards. js/ritual.js turns it into an accordion by
+   adding .is-acc; everything under .is-acc below is that enhancement, so with
+   no JavaScript every card simply stays open. Each card carries a photograph
+   that dissolves into it at every edge: a blurred copy wider and softer, a
+   sharp copy inside it, masked with intersecting horizontal and vertical
+   fades so neither the picture nor the card ever shows a hard line. */
 .ritual-list {
-  list-style: none; margin: 0; padding: 0; counter-reset: step;
-  display: flex; flex-direction: column; gap: clamp(18px, 2.6vw, 30px);
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-direction: column; gap: clamp(14px, 2vw, 22px);
 }
 .ritual-list li {
-  counter-increment: step;
-  position: relative; isolation: isolate;
-  display: grid; grid-template-columns: 64px 1fr; gap: 22px; align-items: start; align-content: center;
+  position: relative; isolation: isolate; min-width: 0;
+  display: flex; flex-direction: column; justify-content: center;
   min-height: clamp(210px, 24vw, 290px);
-  padding: clamp(26px, 3.6vw, 46px) clamp(22px, 4vw, 52px);
+  padding: clamp(24px, 3.4vw, 40px) clamp(22px, 4vw, 52px);
   background: var(--white); border-radius: 3px;
   box-shadow: 0 1px 2px rgba(20,22,28,0.04), 0 22px 56px -20px rgba(20,22,28,0.10);
 }
-.ritual-list li::before {
-  content: counter(step, decimal-leading-zero);
-  font-family: var(--display); font-size: 22px; color: var(--indigo);
-  line-height: 1; margin-top: 1px;
+.rc-head, .rc-toggle { display: flex; align-items: baseline; gap: 18px; margin: 0; }
+.rc-no { font-family: var(--display); font-size: 22px; color: var(--indigo); line-height: 1; min-width: 46px; }
+.rc-title {
+  font-family: var(--display); font-weight: 500; font-size: 17px; line-height: 22px;
+  letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink);
 }
-.ritual-list h4 {
-  font-family: var(--display); font-weight: 500; font-size: 17px;
-  letter-spacing: 0.04em; text-transform: uppercase; margin: 0 0 6px;
-}
-.ritual-list p { font-size: 15.5px; color: var(--ink-2); margin: 0; max-width: 40ch; }
+.rc-body p { font-size: 15.5px; color: var(--ink-2); margin: 14px 0 0 64px; max-width: 40ch; }
 
-.ritual-bg {
-  position: absolute; inset: 0; z-index: -1;
-  overflow: hidden; border-radius: inherit; pointer-events: none;
-}
+.ritual-bg { position: absolute; inset: 0; z-index: -1; overflow: hidden; border-radius: inherit; pointer-events: none; transition: opacity 0.6s ease; }
 .ritual-bg::before, .ritual-bg::after { content: ""; position: absolute; }
-/* the wide soft layer */
 .ritual-bg::before {
   inset: -10%; background: var(--img) 72% center / cover no-repeat;
   filter: blur(26px); opacity: 0.75;
@@ -342,7 +335,6 @@
           mask-image: linear-gradient(90deg, transparent 14%, #000 56%, #000 90%, transparent 100%), linear-gradient(180deg, transparent 0%, #000 34%, #000 66%, transparent 100%);
           mask-composite: intersect;
 }
-/* the sharp layer, held inside the soft one */
 .ritual-bg::after {
   inset: 0; background: var(--img) 70% center / cover no-repeat;
   -webkit-mask-image: linear-gradient(90deg, transparent 30%, #000 54%, #000 84%, transparent 100%), linear-gradient(180deg, transparent 6%, #000 30%, #000 70%, transparent 94%);
@@ -350,38 +342,83 @@
           mask-image: linear-gradient(90deg, transparent 30%, #000 54%, #000 84%, transparent 100%), linear-gradient(180deg, transparent 6%, #000 30%, #000 70%, transparent 94%);
           mask-composite: intersect;
 }
-
 .ritual-1 .ritual-bg { --img: url("../assets/images/ritual/prepare-1400.webp"); }
 .ritual-2 .ritual-bg { --img: url("../assets/images/ritual/apply-1400.webp"); }
 .ritual-3 .ritual-bg { --img: url("../assets/images/ritual/activate-1400.webp"); }
 .ritual-4 .ritual-bg { --img: url("../assets/images/ritual/rest-1400.webp"); }
 .ritual-5 .ritual-bg { --img: url("../assets/images/ritual/rinse-1400.webp"); }
 
-/* Rise on scroll. js/reveal.js adds .in as each card enters view. The base
-   .reveal is an 18px nudge; these cards travel further, and the photograph
-   settles from a slight zoom a beat behind the card. */
-.ritual-list li.reveal { opacity: 0; transform: translateY(64px) scale(0.985); }
-.ritual-list li.reveal.in {
-  opacity: 1; transform: none;
-  transition: opacity 0.9s ease, transform 1s cubic-bezier(0.2, 0.7, 0.2, 1);
+/* ---- the accordion (js/ritual.js adds .is-acc and the buttons) ------------- */
+.rc-toggle {
+  appearance: none; border: 0; background: none; padding: 0; margin: 0;
+  font: inherit; color: inherit; text-align: left; width: 100%;
 }
-@media (prefers-reduced-motion: no-preference) {
-  .ritual-bg::after { transform: scale(1.07); }
-  .ritual-list li.reveal.in .ritual-bg::after {
-    transform: none; transition: transform 1.8s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s;
+.rc-toggle:focus-visible { outline: 2px solid var(--indigo); outline-offset: 6px; border-radius: 2px; }
+.rc-tab, .rc-chev { display: none; }
+.is-acc li { min-height: 0; }
+
+/* Wide: a row of panels, the open one taking the rest of the width. The
+   collapsed ones carry a rotated label. That label is a separate decorative
+   .rc-tab that cross-fades with the real heading, because the heading cannot
+   change from rotated to horizontal mid-resize without visibly snapping. */
+@media (min-width: 900px) {
+  /* Flex, not grid: grid-template-columns cannot interpolate between 1fr and
+     76px at the same track position, so the browser switched discretely and the
+     panels jumped. flex-grow and flex-basis both interpolate, so the open panel
+     grows while the one closing shrinks, and the two always sum to the same width. */
+  .ritual-list.is-acc {
+    display: flex; flex-direction: row; gap: 8px;
+    height: clamp(300px, 27vw, 340px);
   }
-}
-/* The rule above has higher specificity than the base .reveal opt-out, so it
-   has to be restated here or reduced-motion visitors would get hidden cards. */
-@media (prefers-reduced-motion: reduce) {
-  .ritual-list li.reveal { opacity: 1; transform: none; }
+  /* min-width: while one panel closes and another opens their flex-basis values
+     cross over, and without a floor the closing one dips below its resting width
+     (measured at 43px) before settling, which squishes its label. */
+  .is-acc li { flex: 0 0 76px; min-width: 76px; transition: flex 0.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  .is-acc li.is-open { flex: 1 1 0%; }
+  .is-acc li { justify-content: flex-start; overflow: hidden; padding: 0; }
+  .is-acc .rc-head { padding: 24px 32px 0; }
+  .is-acc .rc-body { flex: 1; padding: 0 32px; transition: opacity 0.35s ease 0.25s, visibility 0s 0.25s; }
+  .is-acc li:not(.is-open) .rc-body { opacity: 0; visibility: hidden; transition: opacity 0.15s ease, visibility 0s 0.15s; }
+  .is-acc li:not(.is-open) .rc-toggle { position: absolute; inset: 0; z-index: 2; cursor: pointer; }
+  .is-acc li:not(.is-open) .rc-toggle > * { opacity: 0; }
+  .is-acc .rc-toggle > * { transition: opacity 0.3s ease 0.25s; }
+  .is-acc li:not(.is-open) .ritual-bg { opacity: 0; }
+  .is-acc .rc-tab {
+    position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column;
+    align-items: center; gap: 18px; padding-top: 24px; pointer-events: none;
+    opacity: 0; transition: opacity 0.2s ease;
+  }
+  .is-acc li:not(.is-open) .rc-tab { opacity: 1; transition: opacity 0.4s ease 0.25s; }
+  .is-acc .rc-tab .rc-no { min-width: 0; }
+  .is-acc .rc-tab .rc-title { writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; letter-spacing: 0.1em; font-size: 13px; }
+  .is-acc li:not(.is-open):hover { background: var(--bone); }
 }
 
-/* Narrow: copy on top, picture in a fixed band along the bottom edge. */
-@media (max-width: 760px) {
-  .ritual-list li { grid-template-columns: 1fr; gap: 10px; align-items: start; align-content: start;
-    padding-bottom: 198px; }
-  .ritual-list li::before { margin-top: 0; }
+/* Narrow: a vertical accordion. Each card is a row you tap; the open one
+   reveals its copy and a band of photograph along its bottom edge. The body
+   animates its height through grid-template-rows, which can go to and from 0. */
+@media (max-width: 899px) {
+  .ritual-list li { padding: 0; }
+  .rc-toggle { padding: 18px 22px; cursor: pointer; }
+  .rc-head { padding: 0; }
+  .ritual-list:not(.is-acc) .rc-head { padding: 22px 22px 0; }
+  .ritual-list:not(.is-acc) .rc-body-in { padding: 0 22px 22px; }
+  .rc-body p { margin-left: 0; }
+  .is-acc .rc-chev {
+    display: block; margin-left: auto; align-self: center; flex: none;
+    width: 9px; height: 9px; border-right: 1.5px solid var(--ink-2); border-bottom: 1.5px solid var(--ink-2);
+    transform: rotate(45deg) translateY(-2px); transition: transform 0.35s ease;
+  }
+  .is-acc li.is-open .rc-chev { transform: rotate(-135deg) translateY(-2px); }
+  .is-acc .rc-body {
+    display: grid; grid-template-rows: 0fr; visibility: hidden;
+    transition: grid-template-rows 0.45s cubic-bezier(0.2, 0.7, 0.2, 1), visibility 0s 0.45s;
+  }
+  .is-acc li.is-open .rc-body { grid-template-rows: 1fr; visibility: visible; transition-delay: 0s; }
+  .is-acc .rc-body-in { overflow: hidden; padding: 0 22px; min-height: 0; }
+  .is-acc .rc-body-in::after { content: ""; display: block; height: 190px; }
+  .is-acc li:not(.is-open) .ritual-bg { opacity: 0; }
+  /* the picture sits in a fixed band along the bottom, so it can never reach the copy */
   .ritual-bg::before { inset: auto -6% -4px -6%; height: 200px;
     -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 22%, #000 78%, transparent 100%), linear-gradient(180deg, transparent 0%, #000 42%, #000 78%, transparent 100%);
     -webkit-mask-composite: source-in;
@@ -394,31 +431,17 @@
             mask-image: linear-gradient(90deg, transparent 0%, #000 22%, #000 78%, transparent 100%), linear-gradient(180deg, transparent 0%, #000 36%, #000 80%, transparent 100%);
             mask-composite: intersect;
   }
+  .ritual-list:not(.is-acc) li { padding-bottom: 198px; }
   .ritual-1 .ritual-bg { --img: url("../assets/images/ritual/prepare-800.webp"); }
   .ritual-2 .ritual-bg { --img: url("../assets/images/ritual/apply-800.webp"); }
   .ritual-3 .ritual-bg { --img: url("../assets/images/ritual/activate-800.webp"); }
   .ritual-4 .ritual-bg { --img: url("../assets/images/ritual/rest-800.webp"); }
   .ritual-5 .ritual-bg { --img: url("../assets/images/ritual/rinse-800.webp"); }
 }
-
-/* The deck. Applied only when js/ritual.js adds .is-stack to the track, which it
-   does for wide screens without reduced motion. Cards are pinned in a sticky
-   stage and positioned by scroll progress; each carries its own number and
-   title at the very top so that is the part left showing once a later card has
-   slid over it. */
-.ritual-track { --card-h: clamp(270px, 24vw, 310px); --stack-top: 96px; }
-.is-stack .ritual-stage { position: sticky; top: var(--stack-top); }
-.is-stack .ritual-list { position: relative; display: block; }
-.is-stack .ritual-list li {
-  position: absolute; left: 0; right: 0; top: 0;
-  height: var(--card-h); min-height: 0;
-  align-content: start; padding-top: 18px;
-  transform-origin: 50% 0; will-change: transform;
-  box-shadow: 0 -10px 28px -16px rgba(20,22,28,0.16), 0 22px 56px -20px rgba(20,22,28,0.10);
+@media (prefers-reduced-motion: reduce) {
+  .ritual-list.is-acc, .is-acc *, .is-acc *::before, .is-acc *::after { transition: none !important; }
 }
-/* Title sits where the strip will show; the paragraph starts below the strip's
-   cut line so it is never half-visible on a collapsed card. */
-.is-stack .ritual-list h4 { line-height: 22px; margin-bottom: 14px; }
+
 
 /* --------------------------------------------------------- applicator --- */
 .applicator-band {
