@@ -218,3 +218,36 @@ a { color: inherit; }
 .reveal { opacity: 0; transform: translateY(18px); }
 .reveal.in { opacity: 1; transform: none; transition: opacity 0.7s ease, transform 0.7s ease; }
 @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } }
+
+/* ------------------------------------------------------------- cursor --- */
+/* Bima as the pointer. The hotspot is the tip of the raised hand, measured off
+   the image (7,15 on the 40px, 10,20 on the 56px) -- a cursor whose click point
+   is a guess is a cursor that misses buttons. The 2x images are for high-DPI
+   screens; hotspot coordinates stay in 1x CSS pixels.
+
+   Fine pointers only: touch has no cursor, and a coarse-pointer device that
+   reports hover would get a mascot it cannot meaningfully aim.
+
+   Over clickable things she steps up to 56px, so the size change is the cue
+   that replaces the hand the native pointer would have given. Text fields keep
+   the native I-beam: aiming a text caret with a cartoon character is a real
+   usability cost, not a style choice. A disabled control keeps the resting
+   mascot -- the signup button goes disabled on SUCCESS ("Added"), and a
+   not-allowed cursor over a success message would read as hostile.
+
+   .btn is listed explicitly: it sets its own cursor at class specificity, which
+   outranks a bare element selector, so without it the main call to action
+   would have kept the plain hand. */
+@media (hover: hover) and (pointer: fine) {
+  :root {
+    --cursor-rest:  image-set(url("../assets/cursor/bima-40.png") 1x, url("../assets/cursor/bima-80.png") 2x) 7 15, auto;
+    --cursor-live:  image-set(url("../assets/cursor/bima-56.png") 1x, url("../assets/cursor/bima-112.png") 2x) 10 20, pointer;
+  }
+  html, body { cursor: var(--cursor-rest); }
+  a, button, summary, label, select, .btn,
+  [role="button"], input[type="checkbox"], input[type="radio"], input[type="submit"] {
+    cursor: var(--cursor-live);
+  }
+  input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]), textarea { cursor: text; }
+  button:disabled, input:disabled, .btn[disabled] { cursor: var(--cursor-rest); }
+}

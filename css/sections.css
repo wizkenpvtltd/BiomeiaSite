@@ -299,23 +299,107 @@
 }
 
 /* ------------------------------------------------------------- ritual --- */
-.ritual-list { list-style: none; margin: 0; padding: 0; counter-reset: step; }
+/* Five cards. Each rises as it enters view and carries a photograph that
+   dissolves into the card at every edge -- a blurred copy wider and softer, a
+   sharp copy inside it, so there is never a hard line where picture meets
+   card. The photographs keep their subject on the right and stay pale on the
+   left, which is where the copy sits. */
+.ritual-list {
+  list-style: none; margin: 0; padding: 0; counter-reset: step;
+  display: flex; flex-direction: column; gap: clamp(18px, 2.6vw, 30px);
+}
 .ritual-list li {
   counter-increment: step;
-  display: grid; grid-template-columns: 64px 1fr; gap: 22px;
-  padding: 26px 0; border-top: 1px solid var(--rule);
+  position: relative; isolation: isolate;
+  display: grid; grid-template-columns: 64px 1fr; gap: 22px; align-items: start; align-content: center;
+  min-height: clamp(210px, 24vw, 290px);
+  padding: clamp(26px, 3.6vw, 46px) clamp(22px, 4vw, 52px);
+  background: var(--white); border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(20,22,28,0.04), 0 22px 56px -20px rgba(20,22,28,0.10);
 }
-.ritual-list li:last-child { border-bottom: 1px solid var(--rule); }
 .ritual-list li::before {
   content: counter(step, decimal-leading-zero);
   font-family: var(--display); font-size: 22px; color: var(--indigo);
-  line-height: 1;
+  line-height: 1; margin-top: 1px;
 }
 .ritual-list h4 {
   font-family: var(--display); font-weight: 500; font-size: 17px;
   letter-spacing: 0.04em; text-transform: uppercase; margin: 0 0 6px;
 }
-.ritual-list p { font-size: 15.5px; color: var(--ink-2); margin: 0; }
+.ritual-list p { font-size: 15.5px; color: var(--ink-2); margin: 0; max-width: 40ch; }
+
+.ritual-bg {
+  position: absolute; inset: 0; z-index: -1;
+  overflow: hidden; border-radius: inherit; pointer-events: none;
+}
+.ritual-bg::before, .ritual-bg::after { content: ""; position: absolute; }
+/* the wide soft layer */
+.ritual-bg::before {
+  inset: -10%; background: var(--img) 72% center / cover no-repeat;
+  filter: blur(26px); opacity: 0.75;
+  -webkit-mask-image: linear-gradient(90deg, transparent 14%, #000 56%, #000 90%, transparent 100%), linear-gradient(180deg, transparent 0%, #000 34%, #000 66%, transparent 100%);
+  -webkit-mask-composite: source-in;
+          mask-image: linear-gradient(90deg, transparent 14%, #000 56%, #000 90%, transparent 100%), linear-gradient(180deg, transparent 0%, #000 34%, #000 66%, transparent 100%);
+          mask-composite: intersect;
+}
+/* the sharp layer, held inside the soft one */
+.ritual-bg::after {
+  inset: 0; background: var(--img) 70% center / cover no-repeat;
+  -webkit-mask-image: linear-gradient(90deg, transparent 30%, #000 54%, #000 84%, transparent 100%), linear-gradient(180deg, transparent 6%, #000 30%, #000 70%, transparent 94%);
+  -webkit-mask-composite: source-in;
+          mask-image: linear-gradient(90deg, transparent 30%, #000 54%, #000 84%, transparent 100%), linear-gradient(180deg, transparent 6%, #000 30%, #000 70%, transparent 94%);
+          mask-composite: intersect;
+}
+
+.ritual-1 .ritual-bg { --img: url("../assets/images/ritual/prepare-1400.webp"); }
+.ritual-2 .ritual-bg { --img: url("../assets/images/ritual/apply-1400.webp"); }
+.ritual-3 .ritual-bg { --img: url("../assets/images/ritual/activate-1400.webp"); }
+.ritual-4 .ritual-bg { --img: url("../assets/images/ritual/rest-1400.webp"); }
+.ritual-5 .ritual-bg { --img: url("../assets/images/ritual/rinse-1400.webp"); }
+
+/* Rise on scroll. js/reveal.js adds .in as each card enters view. The base
+   .reveal is an 18px nudge; these cards travel further, and the photograph
+   settles from a slight zoom a beat behind the card. */
+.ritual-list li.reveal { opacity: 0; transform: translateY(64px) scale(0.985); }
+.ritual-list li.reveal.in {
+  opacity: 1; transform: none;
+  transition: opacity 0.9s ease, transform 1s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ritual-bg::after { transform: scale(1.07); }
+  .ritual-list li.reveal.in .ritual-bg::after {
+    transform: none; transition: transform 1.8s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s;
+  }
+}
+/* The rule above has higher specificity than the base .reveal opt-out, so it
+   has to be restated here or reduced-motion visitors would get hidden cards. */
+@media (prefers-reduced-motion: reduce) {
+  .ritual-list li.reveal { opacity: 1; transform: none; }
+}
+
+/* Narrow: copy on top, picture in a fixed band along the bottom edge. */
+@media (max-width: 760px) {
+  .ritual-list li { grid-template-columns: 1fr; gap: 10px; align-items: start; align-content: start;
+    padding-bottom: 198px; }
+  .ritual-list li::before { margin-top: 0; }
+  .ritual-bg::before { inset: auto -6% -4px -6%; height: 200px;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 22%, #000 78%, transparent 100%), linear-gradient(180deg, transparent 0%, #000 42%, #000 78%, transparent 100%);
+    -webkit-mask-composite: source-in;
+            mask-image: linear-gradient(90deg, transparent 0%, #000 22%, #000 78%, transparent 100%), linear-gradient(180deg, transparent 0%, #000 42%, #000 78%, transparent 100%);
+            mask-composite: intersect;
+  }
+  .ritual-bg::after { inset: auto 0 0 0; height: 176px;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 22%, #000 78%, transparent 100%), linear-gradient(180deg, transparent 0%, #000 36%, #000 80%, transparent 100%);
+    -webkit-mask-composite: source-in;
+            mask-image: linear-gradient(90deg, transparent 0%, #000 22%, #000 78%, transparent 100%), linear-gradient(180deg, transparent 0%, #000 36%, #000 80%, transparent 100%);
+            mask-composite: intersect;
+  }
+  .ritual-1 .ritual-bg { --img: url("../assets/images/ritual/prepare-800.webp"); }
+  .ritual-2 .ritual-bg { --img: url("../assets/images/ritual/apply-800.webp"); }
+  .ritual-3 .ritual-bg { --img: url("../assets/images/ritual/activate-800.webp"); }
+  .ritual-4 .ritual-bg { --img: url("../assets/images/ritual/rest-800.webp"); }
+  .ritual-5 .ritual-bg { --img: url("../assets/images/ritual/rinse-800.webp"); }
+}
 
 /* --------------------------------------------------------- applicator --- */
 .applicator-band {
