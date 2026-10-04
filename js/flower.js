@@ -24,7 +24,7 @@
   if (!nav) return;
 
   var NAV_H = 76;                 // the fixed menu bar's height
-  var MAX = 46, MIN_LANE = 60;    // flower size ceiling; narrowest margin worth using
+  var MAX = 46, MIN_LANE = 16;    // flower size ceiling; narrowest margin worth using (a phone's is 20px)
   var TAU = Math.PI * 2;
 
   var still = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -63,12 +63,12 @@
   }
 
   var flowers = specs.map(function (sp, i) {
-    return { el: build(i), idx: i, side: sp.side, rate: sp.rate, mul: sp.mul, at: sp.at, size: 0, phase: 0, span: 1, top: 0 };
+    return { el: build(i), idx: i, side: sp.side, rate: sp.rate, mul: sp.mul, at: sp.at, size: 0, box: 0, phase: 0, span: 1, top: 0 };
   });
   var lead = flowers[0];
 
   var tops = [], vw = 0, vh = 0, lane = 0, laneLeft = 0, lastA = 0, on = false, queued = false;
-  var btn = null, landX = 0, landDocY = 0;   // the submit button the lead flower lands beside
+  var btn = null, landX = 0, landDocY = 0, landBox = 0;   // the submit button the lead flower lands beside, and its size there
   var landed = false, beckoned = false;
 
   function mod(n, m) { return ((n % m) + m) % m; }
@@ -76,13 +76,17 @@
   function clamp01(t) { return Math.min(1, Math.max(0, t)); }
 
   function measure() {
-    vw = document.documentElement.clientWidth;
-    vh = window.innerHeight;
+    var w = document.documentElement.clientWidth, h = window.innerHeight;
+    // on phones the address bar showing and hiding changes the height by a few dozen pixels as you
+    // scroll; keep the tallest height seen so the flowers do not jump (a rotation resets it)
+    vh = (w === vw && vh && Math.abs(h - vh) < 160) ? Math.max(vh, h) : h;
+    vw = w;
     var cs = window.getComputedStyle(nav);
     // left edge of the text column: the nav's content box, which every page shares
     laneLeft = nav.getBoundingClientRect().left + parseFloat(cs.paddingLeft);
     lane = laneLeft;                                   // width of the empty margin on each side
-    var base = Math.max(0, Math.min(MAX, lane - 28));
+    // as big as the margin comfortably allows: full size on wide screens, a small petal in a phone's gutter
+    var base = Math.max(0, Math.min(MAX, Math.max(lane * 0.6, lane - 28)));
 
     var y = window.pageYOffset;
     var nodes = document.querySelectorAll('.hero-band, .page-hero, .section, .signup-section, .article');
@@ -96,15 +100,20 @@
     // landing spot: the empty space just right of the submit button, inside the form
     btn = null;
     var sb = document.getElementById('signup-submit'), form = sb && sb.form;
+    landBox = 0;
     if (sb && form && sb.offsetWidth) {
       var br = sb.getBoundingClientRect(), fr = form.getBoundingClientRect();
-      var lx = Math.min(br.right + 24 + base / 2, fr.right - base / 2 - 4);
-      if (lx - base / 2 >= br.right + 8) { btn = sb; landX = lx; landDocY = br.top + y + br.height / 2; }
+      // the space beside the button is roomier than the margin, so the lead can grow as it lands:
+      // up to full size, as big as that space allows (a phone leaves about 60-90px)
+      var lb = Math.min(MAX, Math.max(base, fr.right - br.right - 36));
+      var lx = Math.min(br.right + 24 + lb / 2, fr.right - lb / 2 - 4);
+      if (lb >= 12 && lx - lb / 2 >= br.right + 8) { btn = sb; landX = lx; landDocY = br.top + y + br.height / 2; landBox = lb; }
     }
 
     flowers.forEach(function (f) {
       f.size = base * f.mul;
-      f.el.style.width = f.el.style.height = f.size + 'px';
+      f.box = f === lead ? Math.max(f.size, landBox) : f.size;     // the element is sized for the biggest it gets
+      f.el.style.width = f.el.style.height = f.box + 'px';
       f.top = NAV_H - f.size * 0.9;                    // tucked behind the menu bar
       f.span = vh + 10 - f.top;                        // from there to just off the bottom of the screen
     });
@@ -128,9 +137,13 @@
     if (beckoned !== want && btn) { beckoned = want; btn.classList.toggle('is-beckoned', want); }
   }
 
-  function place(f, x, y, rx, ry, rz, opacity) {
+  // x is the flower's centre, y the top of it at its current painted size; the element may be
+  // bigger than that (the lead grows as it lands), so it is scaled about its own centre
+  function place(f, x, y, rx, ry, rz, opacity, cur) {
+    cur = cur || f.size;
     f.el.style.opacity = String(opacity);
-    f.el.style.transform = 'translate3d(' + (x - f.size / 2).toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) ' +
+    f.el.style.transform = 'translate3d(' + (x - f.box / 2).toFixed(1) + 'px,' + (y + cur / 2 - f.box / 2).toFixed(1) + 'px,0) ' +
+      'scale(' + (cur / f.box).toFixed(3) + ') ' +
       'perspective(520px) rotateX(' + rx.toFixed(1) + 'deg) rotateY(' + ry.toFixed(1) + 'deg) rotate(' + rz.toFixed(1) + 'deg)';
   }
 
@@ -161,7 +174,8 @@
     var room = Math.max(0, lane / 2 - size / 2 - 8);
     var sway = Math.sin(u * TAU * 2.3) * room * (1 - u);
 
-    var rowY = cy - s;                                   // where the button row is on screen right now
+    var cur = size + (f.box - size) * h;                 // grows from its margin size to its landing size as it glides in
+    var rowY = landDocY - cur / 2 - s;                   // top of the flower when centred on the button row, as it is on screen now
     var e = u * 0.8 + 0.2 * smooth(u);
     var y = y0 + (rowY - y0) * e;
     var x = laneX + sway + (landX - laneX - sway) * h;
@@ -171,8 +185,8 @@
     var rx = Math.sin(u * TAU * 2.6 + 1) * 38 * (1 - h);
     var ry = Math.sin(u * TAU * 1.7) * 52 * (1 - h);
 
-    place(f, x, y, rx, ry, rz, Math.min(1, u / 0.06) * 0.95);   // no fade-out: it stays where it lands
-    setLanded(h >= 0.999 && y > NAV_H - size && y < vh);
+    place(f, x, y, rx, ry, rz, Math.min(1, u / 0.06) * 0.95, cur);   // no fade-out: it stays where it lands
+    setLanded(h >= 0.999 && y > NAV_H - cur && y < vh);
   }
 
   function render() {
