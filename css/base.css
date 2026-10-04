@@ -238,6 +238,10 @@ a { color: inherit; }
    .btn is listed explicitly: it sets its own cursor at class specificity, which
    outranks a bare element selector, so without it the main call to action
    would have kept the plain hand. */
+/* A class selector that sets `cursor` on anything clickable outranks the bare element
+   selectors below and quietly brings back the plain hand: .btn did it, then the
+   accordion's .rc-toggle did. Do not set `cursor: pointer` on a clickable element;
+   add its selector to the list below, or use var(--cursor-live). */
 @media (hover: hover) and (pointer: fine) {
   :root {
     --cursor-rest:  image-set(url("../assets/cursor/bima-40.png") 1x, url("../assets/cursor/bima-80.png") 2x) 7 15, auto;
@@ -250,4 +254,14 @@ a { color: inherit; }
   }
   input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]), textarea { cursor: text; }
   button:disabled, input:disabled, .btn[disabled] { cursor: var(--cursor-rest); }
+}
+
+/* ------------------------------------------------------------ falling flower --- */
+/* One flower, positioned by js/flower.js. Fixed, never catches the pointer, and
+   sits below the menu bar (z-index 50) so it appears from behind it. */
+.falling-flower {
+  position: fixed; left: 0; top: 0; z-index: 40;
+  pointer-events: none; opacity: 0;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 4px 6px rgba(120, 80, 90, 0.14));
 }

@@ -384,7 +384,7 @@
   .is-acc .rc-head { padding: 24px 32px 0; }
   .is-acc .rc-body { flex: 1; padding: 0 32px; transition: opacity 0.35s ease 0.25s, visibility 0s 0.25s; }
   .is-acc li:not(.is-open) .rc-body { opacity: 0; visibility: hidden; transition: opacity 0.15s ease, visibility 0s 0.15s; }
-  .is-acc li:not(.is-open) .rc-toggle { position: absolute; inset: 0; z-index: 2; cursor: pointer; }
+  .is-acc li:not(.is-open) .rc-toggle { position: absolute; inset: 0; z-index: 2; }
   .is-acc li:not(.is-open) .rc-toggle > * { opacity: 0; }
   .is-acc .rc-toggle > * { transition: opacity 0.3s ease 0.25s; }
   .is-acc li:not(.is-open) .ritual-bg { opacity: 0; }
@@ -404,7 +404,7 @@
    animates its height through grid-template-rows, which can go to and from 0. */
 @media (max-width: 899px) {
   .ritual-list li { padding: 0; }
-  .rc-toggle { padding: 18px 22px; cursor: pointer; }
+  .rc-toggle { padding: 18px 22px; }
   .rc-head { padding: 0; }
   .ritual-list:not(.is-acc) .rc-head { padding: 22px 22px 0; }
   .ritual-list:not(.is-acc) .rc-body-in { padding: 0 22px 22px; }
