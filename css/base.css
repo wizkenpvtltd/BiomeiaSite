@@ -265,3 +265,19 @@ a { color: inherit; }
   will-change: transform, opacity;
   filter: drop-shadow(0 4px 6px rgba(120, 80, 90, 0.14));
 }
+
+/* Once it has landed beside the sign-up button the flower rests with a slow nod, and
+   the button answers with a soft blush ring. Three pulses, not a loop: a hint, not a nag.
+   js/flower.js removes the class as soon as the visitor starts typing. */
+.falling-flower svg { transform-origin: 50% 60%; }
+.falling-flower.landed svg { animation: ff-nod 3.6s ease-in-out infinite; }
+@keyframes ff-nod {
+  0%, 100% { transform: rotate(-5deg) scale(1); }
+  50%      { transform: rotate(6deg) scale(1.07); }
+}
+.btn.is-beckoned { animation: ff-beckon 2.4s ease-out 3; }
+@keyframes ff-beckon {
+  0%   { box-shadow: 0 0 0 0 rgba(233, 163, 180, 0.70); }
+  70%  { box-shadow: 0 0 0 16px rgba(233, 163, 180, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(233, 163, 180, 0); }
+}
