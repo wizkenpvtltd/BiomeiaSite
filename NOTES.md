@@ -470,3 +470,55 @@ measured section. Two things follow that are easy to miss:
   the UV map since the model samples each ring by its own arc length. **The
   print artwork still needs re-cutting as a trapezoid** once the manufacturer
   confirms the developed shape.
+
+## Pack size is now 90 ml (decided 2026-10-05)
+
+The 150 ml above was the size the sample could hold. The brief has since moved to
+**80-100 ml** so the tube clears airline carry-on limits and reads as a limited,
+travel-size first batch. The site now says **90 ml / 3.04 fl. oz.** Airline rules are
+generally read against the container's size rather than its contents, so the
+manufacturer should be asked for the **brimful capacity**, which should be 100 ml or
+under, with the declared fill at 80-90 ml.
+
+What it does to the geometry (computed from the build script's own taper formulas,
+0.4 mm film, cap junction held at 75 x 25 so the 70 x 20 applicator head and its
+72 x 22 bore are untouched; the modelled 137 mm body holds about 155 ml inside):
+
+| fill | body length (was 137) | overall with the 53 cap (was 190) |
+|---|---|---|
+| 100 ml | ~90 mm | ~143 mm |
+| **90 ml** | **~81 mm** | **~134 mm** |
+| 80 ml | ~72 mm | ~125 mm |
+
+Only the body length can change; width and thickness are fixed by the comb. In
+`04_Blender_Tube_Build.py` that is `H = 137` becoming about `81`.
+
+**Done on the site:** every "150 ml / 5.07 fl. oz." is now "90 ml / 3.04 fl. oz."
+(hero callout, spec list, tube aria-label, turntable caption).
+
+**Still on 150 ml, not yet redone:**
+- the Blender model, and every render, video and colourway built from it
+  (assets/product, hero carousel, turntable) - the tube there is the long one
+- the wrap artwork: `colourways/generate_wraps.js` has `const H = 137` and prints
+  "150 ml / 5.07 fl. oz." on the front; the label template is 179 x 137
+- the GA drawing and the supplier query sheet (both written around 150 ml / 137 mm)
+
+## Copy changes from the founder's feedback (2026-10-05)
+
+- Oiling is honoured, never corrected: the "No heavy oils" line, the "Heavy oils" problem
+  card, the "heavy oils suffocate the follicle" bridge item and the Story page's
+  heavy-oil and thick-butter lines were rewritten. The base is mineral oil, so
+  criticising oils would have criticised our own formula.
+- The hero ingredient story is oil-to-milk plus the 5-ceramide barrier complex; olive
+  esters are a supporting chip, and the "facial-grade" wording is gone.
+- "Biome" is out of the tagline (title, both footers) until the formula or test results
+  support it. The brand name stays.
+- Absolutes softened ("every one", "strong enough to leave the skin raw", "damage the
+  barrier", "completely", "no stripping", "no guesswork").
+- The ritual is weekly, on wash day ("The Weekly Reset"). Deliberately not said on the
+  page yet: that one tube lasts 6-8 weeks. At 90 ml that means roughly 11-15 ml a use,
+  which needs a dosing check on the real applicator before it becomes a claim.
+- "100% Waterless" was kept: it describes the formula, not a result. Confirm with the
+  formulator that every ingredient is anhydrous before this goes to print.
+- Not done: the "two ways in" lines, the formulation section, UAE, and the terracotta /
+  milk visual system.
