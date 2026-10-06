@@ -496,12 +496,41 @@ Only the body length can change; width and thickness are fixed by the comb. In
 **Done on the site:** every "150 ml / 5.07 fl. oz." is now "90 ml / 3.04 fl. oz."
 (hero callout, spec list, tube aria-label, turntable caption).
 
+**Done in the Blender project (Biomeia_Label_Templates):**
+- `04_Blender_Tube_Build.py`: `H = 81` (was 137), 134 mm overall. The hero camera moves
+  in by the overall ratio (0.55 m becomes 0.388 m), the aim point is 60% of the overall
+  height as before, and the f-number is divided by the ratio squared so the depth of
+  field is unchanged. Without re-aiming, the cap was cropped.
+- Wraps: all six colourways regenerated at 178.54 x 81 mm and rasterised at 18 px/mm
+  (3214 x 1458) by the new `colourways/svg_to_texture.js`, which also measures every
+  text element against the safe zones (front x 23.6-65.6, back x 112.9-154.9,
+  y 4-77.5) and reports anything outside. The 150 ml versions are in `colourways/150ml/`,
+  with the old generator.
+- Front: shorter stack, the "Engineered Scalp / Biome Care" lines gone. The Bima front
+  gets a BIOMEIA wordmark in the tagline's slot and a smaller mascot (28 mm wide, which
+  is about 400 dpi, up from 285 dpi at 40 mm).
+- Back: 100 mm of copy fits in about 70 at 1.55 mm type on a 2.4 mm pitch, with the India
+  line dropped and the web address merged into the consumer-care line. **That type is
+  too small to be legible at press size.** The full ingredients list and regulatory text
+  will need to go on the carton.
+- Renders: stills for all six colourways and the yellow turntable, in
+  `renders/flushcap/` (the 150 ml set is in `renders/flushcap_150ml/`).
+  `render_colourway.py` now takes BIOMEIA_STILL_SAMPLES, BIOMEIA_STILL_RES and
+  BIOMEIA_SKIP_APPLICATOR for quick looks (a 40-sample check takes 20 seconds).
+- Website: tube-front, tube-angle, applicator, turntable-white.mp4 and hero-carousel.mp4
+  are the new renders. The four hero callout anchors were re-registered to the new tube
+  (SVG circles and leaders in index.html), because every colourway shares one camera and
+  one pose, so one set of anchors fits the whole carousel.
+
 **Still on 150 ml, not yet redone:**
-- the Blender model, and every render, video and colourway built from it
-  (assets/product, hero carousel, turntable) - the tube there is the long one
-- the wrap artwork: `colourways/generate_wraps.js` has `const H = 137` and prints
-  "150 ml / 5.07 fl. oz." on the front; the label template is 179 x 137
-- the GA drawing and the supplier query sheet (both written around 150 ml / 137 mm)
+- `01_Tube_Body_Label_Template.svg` and `03_Tube_Wrap_Texture.png` (the original indigo
+  template), `05_Tube_GA_Drawing.svg`, `06_Tube_Supplier_Query_Sheet.svg` and
+  BIOMEIA_Tube_Drawing_for_Manufacturer.pdf: written around 150 ml and a 137 mm body.
+  The manufacturer should not be sent those until they are redone.
+- The turntables for the indigo, burnt and bima colourways (only yellow was re-rendered,
+  because that is the one the site uses), and the colourway branches built on the old tube.
+- The taper is assumed proportional (compressed into the shorter body). How the real
+  tool forms the transition to the crimp is the supplier's call.
 
 ## Copy changes from the founder's feedback (2026-10-05)
 
