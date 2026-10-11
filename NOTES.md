@@ -473,6 +473,12 @@ measured section. Two things follow that are easy to miss:
 
 ## Pack size is now 90 ml (decided 2026-10-05)
 
+> **Superseded in part, 2026-10-11:** the 81 mm "shorter body" described below was tried
+> first and looked wrong (a 75 mm wide section and a full-size cap and applicator on a
+> stub of a tube). The pack is now the whole measured sample **scaled by 0.865**; see
+> "Pack scaled uniformly" at the end of this section. The table below is still a fair
+> record of what shortening only the body would have taken.
+
 The 150 ml above was the size the sample could hold. The brief has since moved to
 **80-100 ml** so the tube clears airline carry-on limits and reads as a limited,
 travel-size first batch. The site now says **90 ml / 3.04 fl. oz.** Airline rules are
@@ -551,3 +557,58 @@ Only the body length can change; width and thickness are fixed by the comb. In
   formulator that every ingredient is anhydrous before this goes to print.
 - Not done: the "two ways in" lines, the formulation section, UAE, and the terracotta /
   milk visual system.
+
+## Pack scaled uniformly (2026-10-11)
+
+The founder's note: the tube and the applicator width should adapt to the smaller volume.
+They do, together. `04_Blender_Tube_Build.py` has one number, `SCALE = 0.865`, and every
+length in the model is the measured 150 ml sample's times SCALE (`MM = 0.001 * SCALE`).
+
+| | 150 ml sample (scale 1.0) | 90 ml pack (scale 0.865) |
+|---|---|---|
+| overall length | 190 | 164.3 |
+| body / cap | 137 / 53 | 118.5 / 45.8 |
+| section at the cap junction | 75 x 25 | 64.9 x 21.6 |
+| applicator head | 70 x 20 | 60.5 x 17.3 |
+| teeth | 10 long | 8.7 long |
+| internal volume (0.4 mm film) | 155 ml | 99.7 ml |
+
+**Why 0.865:** it gives ~100 ml internal, i.e. the brimful capacity. A 90 ml fill is 90% of
+that, so there is ~10% headspace and the tube sits at the 100 ml carry-on limit. (0.837 would
+be 90 ml with no headspace.) The script prints the internal volume every time it runs.
+
+**Scaling everything keeps the applicator clearances in the same ratio** (the bore against
+the head, the teeth against the cap wall), so nothing pokes through, which is why the head
+and the wall scale too. The wall is therefore 1.3 mm, not 1.5; the supplier decides that.
+Whether a real comb can be tooled at 60 x 17 mm with 8.7 mm teeth is their call, and is
+a question for the next supplier message.
+
+**The scene scales with it.** Camera distance (0.55 m becomes 0.476 m), the aim, the light
+positions and sizes scale by SCALE, light power by SCALE squared (same radiance, same
+exposure), and the f-number divides by SCALE (same blur). The result is that the renders are
+the same picture as the 150 ml ones at the same pixel size, apart from the label text, and
+the size difference lives in the numbers (and next to a hand), not in the framing. The scale is
+passed on as `scene["biomeia_scale"]`, which `render_colourway.py` and
+`render_bima_tinted.py` read for the applicator camera and the Rim light.
+
+**Wraps:** drawn in reference millimetres (the 178.54 x 137 sample) and sized x SCALE, so the
+SVGs are 154.4 x 118.5 mm real. The texture is a raster mapped by UV, so it is 3214 x 2466
+whatever the scale (about 530 dpi at real size). Copy changes: no "Engineered Scalp / Biome
+Care" tagline, "90 ml / 3.04 fl. oz.", "Use once a week, on wash day", India line removed. The
+typographic front is closed up and re-centred; the Bima front has a small BIOMEIA wordmark in
+the tagline's place. The period-after-opening symbol and web address moved up one line so the
+web address clears the 4 mm safety margin at the cap junction (the checker caught that, and it
+was inherited from the original layout).
+
+**Type size:** the back panel copy is 1.7 mm in the artwork, so 1.47 mm on the tube, about 4 pt.
+It is a mockup. The full ingredients and regulatory text need the carton.
+
+**Files:** `colourways/150ml/` (the 150 ml wraps and generator), `colourways/stub81mm/`
+(the abandoned 81 mm version), `renders/flushcap_150ml/` and `renders/flushcap_81mm/`.
+`colourways/svg_to_texture.js` rasterises the SVGs and checks every text element against the
+safe zones. Only the yellow turntable was re-rendered (it is the one the site uses).
+
+**Still on 150 ml:** the original `01_` template and `03_` texture, the GA drawing, the supplier
+query sheet and the manufacturer PDF. They should not go to the manufacturer until redone at
+90 ml; the sheet also needs the new questions (comb at this size, wall thickness, brimful
+capacity).
