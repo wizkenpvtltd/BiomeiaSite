@@ -88,12 +88,12 @@
   text-anchor: end;
 }
 
-/* The carousel sits exactly where the product <image> used to, inside the
+/* The product render sits exactly where the product <image> used to, inside the
    callout SVG's coordinate space: rect x=200 y=12 w=340 h=425 of a 560x470
    viewBox. Held as percentages so it tracks the SVG at every width -- a
    fixed offset here would shear the leader lines off the product. */
 .hero-stage { position: relative; width: 100%; }
-.hero-video {
+.hero-product {
   position: absolute;
   left: 35.7143%; top: 2.5532%;
   width: 60.7143%; height: 90.4255%;
@@ -113,7 +113,7 @@
   .hero-media { order: -1; margin-bottom: clamp(20px, 4vw, 34px); }
   .hero-copy { max-width: none; }
   .hero-callouts { display: none; }
-  .hero-video {
+  .hero-product {
     position: static;
     width: auto; max-width: 100%; height: auto;
     max-height: clamp(280px, 62vw, 440px);

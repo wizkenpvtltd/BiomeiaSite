@@ -612,3 +612,13 @@ safe zones. Only the yellow turntable was re-rendered (it is the one the site us
 query sheet and the manufacturer PDF. They should not go to the manufacturer until redone at
 90 ml; the sheet also needs the new questions (comb at this size, wall thickness, brimful
 capacity).
+
+## Hero is a still render (2026-10-11)
+
+The colour-cycling hero video is gone. The hero shows `assets/product/tube-angle.png` (the
+yellow, 38 degree render at the 0.865 scale) as an `<img class="hero-product">` in the same slot
+inside the callout SVG, so the four callouts are unchanged. `js/hero.js` and
+`assets/video/hero-carousel.mp4` were deleted; the CSS class `.hero-video` became
+`.hero-product`. The signup section's yellow turntable video stays. The other colourway
+stills are still in `renders/flushcap/` (citron, lavender, indigo, burnt, bima) if a
+colourway is wanted on a page or in social. Git history has the carousel and `hero.js`.
